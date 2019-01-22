@@ -11,10 +11,12 @@ find_package(catkin REQUIRED COMPONENTS
 include_directories(
 	${catkin_INCLUDE_DIRS}
 	src
+        include
+        cfg
 	)
 #message("$$$$$$$$$" ${msf_updates_INCLUDE_DIRS})
 generate_dynamic_reconfigure_options(
-    cfg/DoublePoseSensor.cfg
+    cfg/SinglePoseSensor.cfg
 )
 
 catkin_package(

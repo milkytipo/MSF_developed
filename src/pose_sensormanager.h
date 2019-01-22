@@ -23,6 +23,8 @@
 #include <msf_core/msf_sensormanagerROS.h>
 #include <msf_core/msf_IMUHandler_ROS.h>
 #include "msf_statedef.hpp"
+//#include "custom_sensorhandler.h"
+//#include "custom_measurement.h"
 #include <msf_updates/pose_sensor_handler/pose_sensorhandler.h>
 #include <msf_updates/pose_sensor_handler/pose_measurement.h>
 #include <msf_updates/SinglePoseSensorConfig.h>

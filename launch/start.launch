@@ -7,13 +7,15 @@
            output="screen">
 
           <!--remap from="msf_core/imu_state_input" to="/imu0" /-->
-           <remap from="msf_core/imu_state_input" to="/bluebird/fcu/imu" />
            <!--remap from="msf_core/imu_state_input" to="/auk/fcu/imu" /-->
            <!--remap from="msf_core/imu_state_input" to="/mav1/fcu/imu" /-->
            
           <!--remap from="msf_updates/pose_with_covariance_input" to="/bluebird/down/vslam/pose" /-->
           <!--remap from="msf_updates/pose_with_covariance_input" to="/auk/down/vslam/pose" /-->
+          <remap from="msf_core/imu_state_input" to="/sensors/imu" />
+          <remap from="msf_updates/zed/odom" to="/sensors/stereo_cam/odom" />
+          <remap from="msf_updates/carto/pose_with_covariance_input" to="/slam/pose" />
           
-          <rosparam file="$(find msf_updates)/pose_sensor_fix.yaml"/>
+          <rosparam file="$(find ai_robot_lcsfl)/sensor_fix.yaml"/>
     </node>
 </launch>
