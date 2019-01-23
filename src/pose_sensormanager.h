@@ -25,8 +25,8 @@
 #include "msf_statedef.hpp"
 //#include "custom_sensorhandler.h"
 //#include "custom_measurement.h"
-#include <msf_updates/pose_sensor_handler/pose_sensorhandler.h>
-#include <msf_updates/pose_sensor_handler/pose_measurement.h>
+#include <pose_sensor_handler/pose_sensorhandler.h>
+#include <pose_sensor_handler/pose_measurement.h>
 #include <ai_robot_lcsfl/SinglePoseSensorConfig.h>
 
 #include "sensor_fusion_comm/InitScale.h"

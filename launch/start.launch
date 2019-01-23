@@ -15,6 +15,7 @@
           <rosparam file="$(find ai_robot_lcsfl)/sensor_fix.yaml"/>
     </node>
     <node pkg="rosservice" type="rosservice" name="initialize" args="call --wait /lcsfl_node/lcsfl_pose_sensor/initialize_msf_scale 1"/>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_imu" args="0 0 0 0 0 0 1 base_link base_imu_link" />
-
+    <node pkg="tf2_ros" type="static_transform_publisher" name="imu_to_stereo" args="0 0 0 0 0 0 1 world odometry_frame" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="imu_to_odom" args="0 0 0 0 0 0 1 world odomg" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="imu_to_slam" args="0 0 0 0 0 0 1 world  " />
 </launch>
