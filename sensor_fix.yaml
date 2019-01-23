@@ -26,6 +26,14 @@
 /lcsfl_node/pose_sensor/init/p_ic/y: 0.0
 /lcsfl_node/pose_sensor/init/p_ic/z: 0.0
 
+/lcsfl_node/pose_sensor/init/q2_ic/w: 1.0
+/lcsfl_node/pose_sensor/init/q2_ic/x: 0.0
+/lcsfl_node/pose_sensor/init/q2_ic/y: 0.0
+/lcsfl_node/pose_sensor/init/q2_ic/z: 0.0
+/lcsfl_node/pose_sensor/init/p2_ic/x: 0.0
+/lcsfl_node/pose_sensor/init/p2_ic/y: 0.0
+/lcsfl_node/pose_sensor/init/p2_ic/z: 0.0
+
 /lcsfl_node/pose_sensor/pose_fixed_scale: true
 /lcsfl_node/pose_sensor/pose_fixed_p_ic: true
 /lcsfl_node/pose_sensor/pose_fixed_q_ic: true

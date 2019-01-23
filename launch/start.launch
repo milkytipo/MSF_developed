@@ -1,21 +1,20 @@
 <launch>
-    <node  launch-prefix="gdb -ex run --args"
-           name="lcsfl_node"
+    <node  name="lcsfl_node"
            pkg="ai_robot_lcsfl"
            type="lcsfl_node"
            clear_params="true"
            output="screen">
 
-          <!--remap from="msf_core/imu_state_input" to="/imu0" /-->
-           <!--remap from="msf_core/imu_state_input" to="/auk/fcu/imu" /-->
-           <!--remap from="msf_core/imu_state_input" to="/mav1/fcu/imu" /-->
-           
+          <remap from="msf_core/hl_state_input" to="/fcu/ekf_state_out" />
+		  <remap from="msf_core/correction" to="/fcu/ekf_state_in" />
           <!--remap from="msf_updates/pose_with_covariance_input" to="/bluebird/down/vslam/pose" /-->
           <!--remap from="msf_updates/pose_with_covariance_input" to="/auk/down/vslam/pose" /-->
           <remap from="msf_core/imu_state_input" to="/sensors/imu" />
           <remap from="msf_updates/zed/odom" to="/sensors/stereo_cam/odom" />
-          <remap from="msf_updates/carto/pose_with_covariance_input" to="/slam/pose" />
-          
+          <remap from="msf_updates/carto/pose_input" to="/slam/pose" />
           <rosparam file="$(find ai_robot_lcsfl)/sensor_fix.yaml"/>
     </node>
+    <node pkg="rosservice" type="rosservice" name="initialize" args="call --wait /lcsfl_node/lcsfl_pose_sensor/initialize_msf_scale 1"/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_imu" args="0 0 0 0 0 0 1 base_link base_imu_link" />
+
 </launch>

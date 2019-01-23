@@ -75,7 +75,7 @@ typedef boost::fusion::vector<
 
     msf_core::StateVar_T<Eigen::Matrix<double, 1, 1>, L2, msf_core::Auxiliary>,  ///< Visual scale.
     msf_core::StateVar_T<Eigen::Quaternion<double>, q2_wv,
-    msf_core::AuxiliaryNonTemporalDrifting>,  ///< Rotation from the world frame to the frame in which the pose is measured expressed in the world frame.
+        msf_core::AuxiliaryNonTemporalDrifting>,  ///< Rotation from the world frame to the frame in which the pose is measured expressed in the world frame.
     msf_core::StateVar_T<Eigen::Matrix<double, 3, 1>, p2_wv>,  ///< Translation from the world frame to the frame in which the pose is measured expressed in the world frame.
     msf_core::StateVar_T<Eigen::Quaternion<double>, q2_ic>,  ///< Rotation from the IMU frame to the camera frame expressed in the IMU frame.
     msf_core::StateVar_T<Eigen::Matrix<double, 3, 1>, p2_ic> ///< Translation from the IMU frame to the camera frame expressed in the IMU frame.

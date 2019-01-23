@@ -27,7 +27,7 @@ catkin_package(
 		msf_core 
         msf_updates
     INCLUDE_DIRS 
-    	#include 
+        include
     	${catkin_INCLUDE_DIRS}
     LIBRARIES 
     	pose_distorter
