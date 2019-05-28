@@ -16,21 +16,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef POSE_SENSOR_H_
-#define POSE_SENSOR_H_
+#ifndef LCSFL_POSE_SENSOR_H_
+#define LCSFL_POSE_SENSOR_H_
 
 #include <msf_core/msf_sensormanagerROS.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <geometry_msgs/PoseStamped.h>
-#include <nav_msgs/Odometry.h>
 #include <msf_updates/PoseDistorter.h>
 
 namespace msf_pose_sensor {
 
 template<typename MEASUREMENT_TYPE, typename MANAGER_TYPE>
 class PoseSensorHandler : public msf_core::SensorHandler<
-        typename msf_updates::EKFState> {
+    typename msf_updates::EKFState> {
  private:
 
   Eigen::Quaternion<double> z_q_;  ///< Attitude measurement camera seen from world.
@@ -42,7 +41,6 @@ class PoseSensorHandler : public msf_core::SensorHandler<
   ros::Subscriber subPoseWithCovarianceStamped_;
   ros::Subscriber subTransformStamped_;
   ros::Subscriber subPoseStamped_;
-  ros::Subscriber subOdom_;
 
   bool measurement_world_sensor_;  ///< Defines if the pose of the sensor is
                                    // measured in world coordinates (true, default)
@@ -62,8 +60,6 @@ class PoseSensorHandler : public msf_core::SensorHandler<
       const geometry_msgs::PoseWithCovarianceStampedConstPtr & msg);
   void MeasurementCallback(
       const geometry_msgs::PoseWithCovarianceStampedConstPtr & msg);
-  void MeasurementCallback(
-      const nav_msgs::OdometryConstPtr & msg);
   void MeasurementCallback(const geometry_msgs::PoseStampedConstPtr & msg);
   void MeasurementCallback(const geometry_msgs::TransformStampedConstPtr & msg);
 
@@ -85,4 +81,4 @@ class PoseSensorHandler : public msf_core::SensorHandler<
 }  // namespace msf_pose_sensor
 #include "implementation/pose_sensorhandler.hpp"
 
-#endif  // POSE_SENSOR_H_
+#endif  // LCSFL_POSE_SENSOR_H_

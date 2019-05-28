@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2012-2013 Simon Lynen, ASL, ETH Zurich, Switzerland
  * You can contact the author at <slynen at ethz dot ch>
  *
@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef MSF_STATEDEF_HPP_
-#define MSF_STATEDEF_HPP_
+#ifndef LCSFL_MSF_STATEDEF_HPP_
+#define LCSFL_MSF_STATEDEF_HPP_
 
 #include <Eigen/Dense>
 #include <msf_core/msf_fwds.h>
@@ -38,12 +38,7 @@ enum StateDefinition {  // Must not manually set the enum values!
   q_wv,
   p_wv,
   q_ic,
-  p_ic,
-  L2,
-  q2_wv,
-  p2_wv,
-  q2_ic,
-  p2_ic
+  p_ic
 };
 
 namespace {
@@ -71,16 +66,9 @@ typedef boost::fusion::vector<
         msf_core::AuxiliaryNonTemporalDrifting>,  ///< Rotation from the world frame to the frame in which the pose is measured expressed in the world frame.
     msf_core::StateVar_T<Eigen::Matrix<double, 3, 1>, p_wv>,  ///< Translation from the world frame to the frame in which the pose is measured expressed in the world frame.
     msf_core::StateVar_T<Eigen::Quaternion<double>, q_ic>,  ///< Rotation from the IMU frame to the camera frame expressed in the IMU frame.
-    msf_core::StateVar_T<Eigen::Matrix<double, 3, 1>, p_ic>, ///< Translation from the IMU frame to the camera frame expressed in the IMU frame.
+    msf_core::StateVar_T<Eigen::Matrix<double, 3, 1>, p_ic>  ///< Translation from the IMU frame to the camera frame expressed in the IMU frame.
 
-    msf_core::StateVar_T<Eigen::Matrix<double, 1, 1>, L2, msf_core::Auxiliary>,  ///< Visual scale.
-    msf_core::StateVar_T<Eigen::Quaternion<double>, q2_wv,
-        msf_core::AuxiliaryNonTemporalDrifting>,  ///< Rotation from the world frame to the frame in which the pose is measured expressed in the world frame.
-    msf_core::StateVar_T<Eigen::Matrix<double, 3, 1>, p2_wv>,  ///< Translation from the world frame to the frame in which the pose is measured expressed in the world frame.
-    msf_core::StateVar_T<Eigen::Quaternion<double>, q2_ic>,  ///< Rotation from the IMU frame to the camera frame expressed in the IMU frame.
-    msf_core::StateVar_T<Eigen::Matrix<double, 3, 1>, p2_ic> ///< Translation from the IMU frame to the camera frame expressed in the IMU frame.
-
- > fullState_T;
+> fullState_T;
 }
 
 typedef msf_core::GenericState_T<fullState_T, StateDefinition> EKFState;  ///< The state we want to use in this EKF.
@@ -89,5 +77,5 @@ typedef shared_ptr<const EKFState> EKFStateConstPtr;
 
 }
 
-#include "msf_updates/static_ordering_assertions.h" //DO NOT REMOVE THIS
+#include <msf_updates/static_ordering_assertions.h> //DO NOT REMOVE THIS
 #endif  // MSF_STATEDEF_HPP_

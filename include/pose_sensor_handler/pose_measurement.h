@@ -16,8 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef POSE_MEASUREMENT_HPP_
-#define POSE_MEASUREMENT_HPP_
+#ifndef LCSFL_POSE_MEASUREMENT_HPP_
+#define LCSFL_POSE_MEASUREMENT_HPP_
 
 #include <msf_core/msf_types.h>
 #include <msf_core/msf_measurement.h>

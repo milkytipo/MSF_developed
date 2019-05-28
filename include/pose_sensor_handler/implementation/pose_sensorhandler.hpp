@@ -19,8 +19,8 @@
 #include <msf_core/eigen_utils.h>
 #include <msf_core/msf_types.h>
 
-#ifndef POSE_SENSORHANDLER_HPP_
-#define POSE_SENSORHANDLER_HPP_
+#ifndef LCSFL_POSE_SENSORHANDLER_HPP_
+#define LCSFL_POSE_SENSORHANDLER_HPP_
 
 namespace msf_pose_sensor {
 template<typename MEASUREMENT_TYPE, typename MANAGER_TYPE>
@@ -74,8 +74,6 @@ PoseSensorHandler<MEASUREMENT_TYPE, MANAGER_TYPE>::PoseSensorHandler(
       > ("transform_input", 20, &PoseSensorHandler::MeasurementCallback, this);
   subPoseStamped_ = nh.subscribe < geometry_msgs::PoseStamped
       > ("pose_input", 20, &PoseSensorHandler::MeasurementCallback, this);
-  subOdom_ = nh.subscribe < nav_msgs::Odometry
-          > ("odom", 20, &PoseSensorHandler::MeasurementCallback, this);
 
   z_p_.setZero();
   z_q_.setIdentity();
@@ -188,43 +186,6 @@ void PoseSensorHandler<MEASUREMENT_TYPE, MANAGER_TYPE>::MeasurementCallback(
 
 template<typename MEASUREMENT_TYPE, typename MANAGER_TYPE>
 void PoseSensorHandler<MEASUREMENT_TYPE, MANAGER_TYPE>::MeasurementCallback(
-    const nav_msgs::OdometryConstPtr & msg) {
-  this->SequenceWatchDog(msg->header.seq,
-                         subPoseWithCovarianceStamped_.getTopic());
-  MSF_INFO_STREAM_ONCE(
-      "*** pose sensor got first measurement from topic "
-          << this->topic_namespace_ << "/"
-          << subPoseWithCovarianceStamped_.getTopic() << " ***");
-
-  geometry_msgs::PoseWithCovarianceStampedPtr pose(
-      new geometry_msgs::PoseWithCovarianceStamped());
-
-  if (!use_fixed_covariance_)  // Take covariance from sensor.
-  {
-    MSF_WARN_STREAM_THROTTLE(
-        2,
-        "Provided message type without covariance but set fixed_covariance == "
-        "false at the same time. Discarding message.");
-    return;
-  }
-
-  // Fixed covariance will be set in measurement class -> MakeFromSensorReadingImpl.
-  pose->header = msg->header;
-
-  pose->pose.pose.position.x = msg->pose.pose.position.x;
-  pose->pose.pose.position.y = msg->pose.pose.position.y;
-  pose->pose.pose.position.z = msg->pose.pose.position.z;
-
-  pose->pose.pose.orientation.w = msg->pose.pose.orientation.w;
-  pose->pose.pose.orientation.x = msg->pose.pose.orientation.x;
-  pose->pose.pose.orientation.y = msg->pose.pose.orientation.y;
-  pose->pose.pose.orientation.z = msg->pose.pose.orientation.z;
-
-  ProcessPoseMeasurement(pose);
-}
-
-template<typename MEASUREMENT_TYPE, typename MANAGER_TYPE>
-void PoseSensorHandler<MEASUREMENT_TYPE, MANAGER_TYPE>::MeasurementCallback(
     const geometry_msgs::TransformStampedConstPtr & msg) {
   this->SequenceWatchDog(msg->header.seq, subTransformStamped_.getTopic());
   MSF_INFO_STREAM_ONCE(
@@ -299,6 +260,5 @@ void PoseSensorHandler<MEASUREMENT_TYPE, MANAGER_TYPE>::MeasurementCallback(
 
   ProcessPoseMeasurement(pose);
 }
-
 }  // namespace msf_pose_sensor
-#endif  // POSE_SENSORHANDLER_HPP_
+#endif  // LCSFL_POSE_SENSORHANDLER_HPP_

@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(ai_robot_lcsfl)
+add_definitions(-DBOOST_NO_CXX11_VARIADIC_TEMPLATES)
 
 find_package(catkin REQUIRED COMPONENTS 
 	roscpp 
@@ -10,9 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
 )
 include_directories(
 	${catkin_INCLUDE_DIRS}
-	src
+#	src
         include
-        cfg
+  #      cfg
 	)
 #message("$$$$$$$$$" ${msf_updates_INCLUDE_DIRS})
 generate_dynamic_reconfigure_options(
@@ -21,7 +22,7 @@ generate_dynamic_reconfigure_options(
 
 catkin_package(
     CATKIN_DEPENDS 
-		roscpp 
+	roscpp 
         geometry_msgs
         sensor_fusion_comm
 		msf_core 
@@ -32,13 +33,12 @@ catkin_package(
     LIBRARIES 
     	pose_distorter
 )
-
 add_executable(lcsfl_node src/main.cpp)
 
 target_link_libraries(lcsfl_node
     ${catkin_LIBRARIES}
 )
 
-#dd_dependencies(fusion_eth ${${PROJECT_NAME}_EXPORTED_TARGETS})
+add_dependencies(lcsfl_node ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 
