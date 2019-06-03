@@ -1,0 +1,27 @@
+<launch>
+
+    <node name="vision_sensor" pkg="ai_robot_lcsfl" type="lcsfl_node" clear_params="true" output="screen">
+
+		<remap from="msf_core/hl_state_input" to="/fcu/ekf_state_out" />
+		<remap from="msf_core/correction" to="/fcu/ekf_state_in" />
+		<remap from="msf_updates/transform_input" to="/vicon/robot_name/robot_name" />
+		<remap from="msf_core/imu_state_input" to="/imu"  />
+		<remap from="msf_updates/transform_input" to="/slam/tf" />
+		<rosparam file="$(find ai_robot_lcsfl)/KITTI.yaml"/>
+    </node>
+
+    <node pkg="rosservice" type="rosservice" name="initialize" args="call --wait /vision_sensor/pose_sensor/initialize_msf_scale 1"/>
+
+   <node name="transferTool" pkg = "publishandsubscribe" type= "transtopic_node" output="screen" />
+
+    <node name = "playbag" pkg="rosbag" type="play" args="--clock /media/wuzida/Vampire/data/KITTI/RawData/kitti_2011_10_03_drive_0027_synced.bag --pause " output = "screen">    
+       <remap from="/kitti/camera_color_left/image_raw" to="/camera/left/image_raw" />
+       <remap from="/kitti/camera_color_right/image_raw" to="/camera/right/image_raw" />
+    </node>
+
+    <node name = "runslam" pkg="ORB_SLAM2" type="Stereo" args ="/home/wuzida/ORB_SLAM2/Vocabulary/ORBvoc.txt /home/wuzida/ORB_SLAM2/Examples/Stereo/KITTI04-12.yaml false" output="screen"/>
+
+
+
+</launch>
+

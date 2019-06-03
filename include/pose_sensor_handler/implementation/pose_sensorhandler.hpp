@@ -158,7 +158,7 @@ void PoseSensorHandler<MEASUREMENT_TYPE, MANAGER_TYPE>::ProcessPoseMeasurement(
       fixedstates |= 1 << MEASUREMENT_TYPE::AuxState::q_wv;
     }
   }
-
+MSF_INFO_STREAM("the fixed pwv :");
   shared_ptr<MEASUREMENT_TYPE> meas(new MEASUREMENT_TYPE(
       n_zp_, n_zq_, measurement_world_sensor_, use_fixed_covariance_,
       provides_absolute_measurements_, this->sensorID,

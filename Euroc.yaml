@@ -3,7 +3,7 @@
 
 #########IMU PARAMETERS#######
 ######## Asctec Firefly IMU
-/pose_sensor/core/core_noise_acc:  2.0000e-3  #according by EuRoc
+/pose_sensor/core/core_noise_acc:  2.0000e-3 
 /pose_sensor/core/core_noise_accbias: 3.0000e-3 
 /pose_sensor/core/core_noise_gyr: 1.6968e-04 
 /pose_sensor/core/core_noise_gyrbias: 1.9393e-05
@@ -18,21 +18,13 @@
 /vision_sensor/pose_sensor/pose_noise_meas_p: 0.005
 /vision_sensor/pose_sensor/pose_noise_meas_q: 0.005
 
-#/vision_sensor/pose_sensor/init/q_ic/w: 0.4975
-#/vision_sensor/pose_sensor/init/q_ic/x: -0.5055
-#/vision_sensor/pose_sensor/init/q_ic/y: 0.5033
-#/vision_sensor/pose_sensor/init/q_ic/z: -0.4937
-#/vision_sensor/pose_sensor/init/p_ic/x: -0.8219 
-#/vision_sensor/pose_sensor/init/p_ic/y: 0.2685
-#/vision_sensor/pose_sensor/init/p_ic/z: -1.0924
-
-/vision_sensor/pose_sensor/init/q_ic/w: 0.4975
-/vision_sensor/pose_sensor/init/q_ic/x: 0.5055
-/vision_sensor/pose_sensor/init/q_ic/y: -0.5033
-/vision_sensor/pose_sensor/init/q_ic/z: 0.4937
-/vision_sensor/pose_sensor/init/p_ic/x: 1.1018 
-/vision_sensor/pose_sensor/init/p_ic/y: -0.8158
-/vision_sensor/pose_sensor/init/p_ic/z: 0.2479
+/vision_sensor/pose_sensor/init/q_ic/w: 0.7123
+/vision_sensor/pose_sensor/init/q_ic/x: 0.0077
+/vision_sensor/pose_sensor/init/q_ic/y: -0.0105
+/vision_sensor/pose_sensor/init/q_ic/z: -0.7018
+/vision_sensor/pose_sensor/init/p_ic/x: -0.0216 
+/vision_sensor/pose_sensor/init/p_ic/y: -0.0647
+/vision_sensor/pose_sensor/init/p_ic/z:  0.0098
 
 /vision_sensor/pose_sensor/pose_fixed_scale: true
 /vision_sensor/pose_sensor/pose_fixed_p_ic: true
@@ -44,4 +36,4 @@
 /vision_sensor/pose_sensor/pose_use_fixed_covariance: true
 /vision_sensor/pose_sensor/pose_measurement_world_sensor: true  # selects if sensor measures its position w.r.t. world (true, e.g. Vicon) or the position of the world coordinate system w.r.t. the sensor (false, e.g. ethzasl_ptam
 
-/vision_sensor/pose_sensor/pose_measurement_minimum_dt: 0.5  # Sets the minimum time in seconds between two pose measurements.
+/vision_sensor/pose_sensor/pose_measurement_minimum_dt: 0.05  # Sets the minimum time in seconds between two pose measurements.

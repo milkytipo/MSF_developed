@@ -164,9 +164,6 @@ class PoseSensorManager : public msf_core::MSF_SensorManagerROS<
     v << 0, 0, 0;			/// Robot velocity (IMU centered).
     w_m << 0, 0, 0;		/// Initial angular velocity.
 
-    q_wv.setIdentity();  // Vision-world rotation drift.
-    p_wv.setZero();  // Vision-world position drift.
-
     P.setZero();  // Error state covariance; if zero, a default initialization in msf_core is used
 
     p_vc = pose_handler_->GetPositionMeasurement();
@@ -193,17 +190,34 @@ class PoseSensorManager : public msf_core::MSF_SensorManagerROS<
     pnh.param("pose_sensor/init/q_ic/y", q_ic.y(), 0.0);
     pnh.param("pose_sensor/init/q_ic/z", q_ic.z(), 0.0);
     q_ic.normalize();
+/*For KITTI modified by zida wu  
+
+    q.w() = 0.867789133081;//modify by zida wu
+    q.x() = 0.0127812016969;
+    q.y() = 0.0201438931533;
+    q.z() = 0.496359632684;
+    q.setIdentity();
+    p_wv.setZero();  //modify by zida wu 
+    q_wv = (q*q_ic*q_cv.conjugate()).conjugate(); //the first pose of IMU is unviable,so this equation doesnt work
+
+*/
+///*
+    q_wv.setIdentity();  // Vision-world rotation drift.
+    p_wv.setZero();  // Vision-world position drift
 
     // Calculate initial attitude and position based on sensor measurements.
-    if (!pose_handler_->ReceivedFirstMeasurement()) {  // If there is no pose measurement, only apply q_wv.
-      q = q_wv;
-    } else {  // If there is a pose measurement, apply q_ic and q_wv to get initial attitude.
-      q = (q_ic * q_cv.conjugate() * q_wv).conjugate();
-    }
 
-    q.normalize();
+//  if (!pose_handler_->ReceivedFirstMeasurement()) {  //this judgement is always wrong, If there is no pose measurement, only apply q_wv.
+//   q = q_wv;
+//  } else {  // If there is a pose measurement, apply q_ic and q_wv to get initial attitude.
+    q = (q_ic * q_cv.conjugate() * q_wv).conjugate(); //this way will decrease the converge time of WI
+
+//  }
+
     p = p_wv + q_wv.conjugate().toRotationMatrix() * p_vc / scale
-        - q.toRotationMatrix() * p_ic;
+       - q.toRotationMatrix() * p_ic;
+//*/
+    q.normalize();
 
     a_m = q.inverse() * g;			/// Initial acceleration.
 

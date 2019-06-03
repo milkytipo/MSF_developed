@@ -1,14 +1,14 @@
 <launch>
-    <node name="vision_sensor" pkg="ai_robot_lcsfl" type="lcsfl_node" clear_params="true" output="screen">
+    <node name="vicon_sensor" pkg="ai_robot_lcsfl" type="lcsfl_node" clear_params="true" output="screen">
 
 		<remap from="msf_core/hl_state_input" to="/fcu/ekf_state_out" />
 		<remap from="msf_core/correction" to="/fcu/ekf_state_in" />
 		<remap from="msf_updates/transform_input" to="/vicon/robot_name/robot_name" />
-		<remap from="/msf_core/imu_state_input" to="/imu"  />
-		<remap from="msf_updates/transform_input" to="/slam/tf" />
+		<remap from="/msf_core/imu_state_input" to="/auk/fcu/imu"  />
+		<remap from="msf_updates/transform_input" to="/vicon/auk/auk" />
 
 
-		<rosparam file="$(find ai_robot_lcsfl)/KITTI.yaml"/>
+		<rosparam file="$(find ai_robot_lcsfl)/vicon_fix.yaml"/>
     </node>
 <node pkg="rosservice" type="rosservice" name="initialize" args="call --wait /vision_sensor/pose_sensor/initialize_msf_scale 1"/>
 </launch>
