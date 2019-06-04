@@ -1,0 +1,36 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~core_init_filter" : \b [bool] call filter init using defined scale min: False, default: False, max: True
+- \b "~core_set_height" : \b [bool] call filter init using defined height min: False, default: False, max: True
+- \b "~core_height" : \b [double] height in m for init min: 0.1, default: 1.0, max: 20.0
+- \b "~pose_initial_scale" : \b [double] value for initial scale min: 0.001, default: 1.0, max: 30.0
+- \b "~pose_fixed_scale" : \b [bool] fix scale min: False, default: False, max: True
+- \b "~pose_fixed_p_ic" : \b [bool] fix calibration state position min: False, default: False, max: True
+- \b "~pose_fixed_q_ic" : \b [bool] fix calibration state attitude min: False, default: False, max: True
+- \b "~pose_fixed_p_wv" : \b [bool] fix world vision position drift min: False, default: False, max: True
+- \b "~pose_fixed_q_wv" : \b [bool] fix world vision attitude drift min: False, default: False, max: True
+- \b "~pose_noise_scale" : \b [double] propagation: noise scale (std. dev) min: 0.0, default: 0.0, max: 10.0
+- \b "~pose_noise_p_wv" : \b [double] propagation: noise p_wv (std. dev) min: 0.0, default: 0.0, max: 10.0
+- \b "~pose_noise_q_wv" : \b [double] propagation: noise q_wv (std. dev) min: 0.0, default: 0.0, max: 10.0
+- \b "~pose_noise_p_ic" : \b [double] propagation: noise p_ic (std. dev) min: 0.0, default: 0.0, max: 10.0
+- \b "~pose_noise_q_ic" : \b [double] propagation: noise q_ic (std. dev) min: 0.0, default: 0.0, max: 10.0
+- \b "~pose_noise_meas_p" : \b [double] noise for measurement sensor (std. dev) min: 0.0, default: 0.01, max: 10.0
+- \b "~pose_noise_meas_q" : \b [double] noise for measurement sensor (std. dev) min: 0.0, default: 0.01, max: 10.0
+- \b "~pose_delay" : \b [double] fix delay in seconds min: -2.0, default: 0.02, max: 2.0
+- \b "~pose_initial_scale_2" : \b [double] value for initial scale min: 0.001, default: 1.0, max: 30.0
+- \b "~pose_fixed_scale_2" : \b [bool] fix scale min: False, default: False, max: True
+- \b "~pose_fixed_p_ic_2" : \b [bool] fix calibration state position min: False, default: False, max: True
+- \b "~pose_fixed_q_ic_2" : \b [bool] fix calibration state attitude min: False, default: False, max: True
+- \b "~pose_fixed_p_wv_2" : \b [bool] fix world vision position drift min: False, default: False, max: True
+- \b "~pose_fixed_q_wv_2" : \b [bool] fix world vision attitude drift min: False, default: False, max: True
+- \b "~pose_noise_scale_2" : \b [double] propagation: noise scale (std. dev) min: 0.0, default: 0.0, max: 10.0
+- \b "~pose_noise_p_wv_2" : \b [double] propagation: noise p2_wv (std. dev) min: 0.0, default: 0.0, max: 10.0
+- \b "~pose_noise_q_wv_2" : \b [double] propagation: noise q2_wv (std. dev) min: 0.0, default: 0.0, max: 10.0
+- \b "~pose_noise_p_ic_2" : \b [double] propagation: noise p2_ic (std. dev) min: 0.0, default: 0.0, max: 10.0
+- \b "~pose_noise_q_ic_2" : \b [double] propagation: noise q2_ic (std. dev) min: 0.0, default: 0.0, max: 10.0
+- \b "~pose_noise_meas_p_2" : \b [double] noise for measurement sensor (std. dev) min: 0.0, default: 0.01, max: 10.0
+- \b "~pose_noise_meas_q_2" : \b [double] noise for measurement sensor (std. dev) min: 0.0, default: 0.01, max: 10.0
+- \b "~pose_delay_2" : \b [double] fix delay in seconds min: -2.0, default: 0.02, max: 2.0
+

@@ -37,8 +37,8 @@
 /vision_sensor/pose_sensor/pose_fixed_scale: true
 /vision_sensor/pose_sensor/pose_fixed_p_ic: true
 /vision_sensor/pose_sensor/pose_fixed_q_ic: true
-/vision_sensor/pose_sensor/pose_fixed_p_wv: true
-/vision_sensor/pose_sensor/pose_fixed_q_wv: true
+/vision_sensor/pose_sensor/pose_fixed_p_wv: false
+/vision_sensor/pose_sensor/pose_fixed_q_wv: false
  
 /vision_sensor/pose_sensor/pose_absolute_measurements: true
 /vision_sensor/pose_sensor/pose_use_fixed_covariance: true

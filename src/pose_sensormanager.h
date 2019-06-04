@@ -23,8 +23,8 @@
 #include <msf_core/msf_sensormanagerROS.h>
 #include <msf_core/msf_IMUHandler_ROS.h>
 #include "msf_statedef.hpp"
-#include <msf_updates/pose_sensor_handler/pose_sensorhandler.h>
-#include <msf_updates/pose_sensor_handler/pose_measurement.h>
+#include <vision_sensor_handler/pose_sensorhandler.h>
+#include <vision_sensor_handler/pose_measurement.h>
 #include <msf_updates/SinglePoseSensorConfig.h>
 
 #include "sensor_fusion_comm/InitScale.h"
@@ -216,6 +216,7 @@ class PoseSensorManager : public msf_core::MSF_SensorManagerROS<
 
     p = p_wv + q_wv.conjugate().toRotationMatrix() * p_vc / scale
        - q.toRotationMatrix() * p_ic;
+//    p.setZero();
 //*/
     q.normalize();
 

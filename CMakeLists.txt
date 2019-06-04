@@ -15,7 +15,7 @@ include_directories(
         include
   #      cfg
 	)
-#message("$$$$$$$$$" ${msf_updates_INCLUDE_DIRS})
+#message("$$$$$$$$$" ${include_directories})
 generate_dynamic_reconfigure_options(
     cfg/SinglePoseSensor.cfg
 )
