@@ -1,8 +1,0 @@
-prefix=/home/wuzida/catkin_ws/src/ai_robot_lcsfl/cmake-build-debug/devel
-
-Name: ai_robot_lcsfl
-Description: Description of ai_robot_lcsfl
-Version: 1.0.1
-Cflags: -I/home/wuzida/catkin_ws/src/ai_robot_lcsfl/cmake-build-debug/devel/include -I/home/wuzida/catkin_ws/src/ai_robot_lcsfl/include -I/home/wuzida/catkin_ws/devel/include -I/home/wuzida/catkin_ws/src/ethzasl_msf/msf_core/include -I/home/wuzida/catkin_ws/src/ethzasl_msf/msf_timing/include -I/home/wuzida/catkin_ws/src/ethzasl_msf/msf_updates/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include -I/usr/include/eigen3
-Libs: -L/home/wuzida/catkin_ws/src/ai_robot_lcsfl/cmake-build-debug/devel/lib -lpose_distorter
-Requires: roscpp geometry_msgs sensor_fusion_comm msf_core msf_updates
