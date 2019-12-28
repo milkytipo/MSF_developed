@@ -4,8 +4,8 @@
 		<remap from="msf_core/hl_state_input" to="/fcu/ekf_state_out" />
 		<remap from="msf_core/correction" to="/fcu/ekf_state_in" />
 		<remap from="msf_updates/transform_input" to="/vicon/robot_name/robot_name" />
-		<remap from="/msf_core/imu_state_input" to="/auk/fcu/imu"  />
-		<remap from="msf_updates/transform_input" to="/vicon/auk/auk" />
+		<remap from="/msf_core/imu_state_input" to="/imu"  />
+		<remap from="msf_updates/transform_input" to="/slam/pose" />
 
 
 		<rosparam file="$(find ai_robot_lcsfl)/vicon_fix.yaml"/>

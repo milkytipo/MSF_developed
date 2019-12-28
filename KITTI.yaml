@@ -1,5 +1,5 @@
-/pose_sensor/core/data_playback: true
-/pose_sensor/core/fixed_bias: 0
+/core/data_playback: true
+/core/fixed_bias: 0
 
 #########IMU PARAMETERS#######
 ######## Asctec Firefly IMU
@@ -37,11 +37,11 @@
 /vision_sensor/pose_sensor/pose_fixed_scale: true
 /vision_sensor/pose_sensor/pose_fixed_p_ic: true
 /vision_sensor/pose_sensor/pose_fixed_q_ic: true
-/vision_sensor/pose_sensor/pose_fixed_p_wv: false
-/vision_sensor/pose_sensor/pose_fixed_q_wv: false
+/vision_sensor/pose_sensor/pose_fixed_p_wv: true
+/vision_sensor/pose_sensor/pose_fixed_q_wv: true
  
 /vision_sensor/pose_sensor/pose_absolute_measurements: true
 /vision_sensor/pose_sensor/pose_use_fixed_covariance: true
-/vision_sensor/pose_sensor/pose_measurement_world_sensor: true  # selects if sensor measures its position w.r.t. world (true, e.g. Vicon) or the position of the world coordinate system w.r.t. the sensor (false, e.g. ethzasl_ptam
+/vision_sensor/pose_sensor/pose_measurement_world_sensor: false  # selects if sensor measures its position w.r.t. world (true, e.g. Vicon) or the position of the world coordinate system w.r.t. the sensor (false, e.g. ethzasl_ptam
 
 /vision_sensor/pose_sensor/pose_measurement_minimum_dt: 0.5  # Sets the minimum time in seconds between two pose measurements.

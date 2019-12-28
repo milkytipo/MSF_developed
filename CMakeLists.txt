@@ -35,7 +35,7 @@ catkin_package(
 )
 add_executable(lcsfl_node src/main.cpp)
 
-target_link_libraries(lcsfl_node
+target_link_libraries(lcsfl_node pose_distorter
     ${catkin_LIBRARIES}
 )
 

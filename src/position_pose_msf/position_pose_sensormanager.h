@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef LCSFL_POSE_MEASUREMENTMANAGER_H
-#define LCSFL_POSE_MEASUREMENTMANAGER_H
+#ifndef POSITION_POSE_SENSOR_MANAGER_H
+#define POSITION_POSE_SENSOR_MANAGER_H
 
 #include <ros/ros.h>
 
@@ -25,51 +25,64 @@
 #include "msf_statedef.hpp"
 #include <vision_sensor_handler/pose_sensorhandler.h>
 #include <vision_sensor_handler/pose_measurement.h>
-#include <msf_updates/SinglePoseSensorConfig.h>
+#include <gps_sensor_handler/position_sensorhandler.h>
+#include <gps_sensor_handler/position_measurement.h>
+#include <msf_updates/PositionPoseSensorConfig.h>
 
 #include "sensor_fusion_comm/InitScale.h"
 #include "sensor_fusion_comm/InitHeight.h"
 
-namespace msf_pose_sensor {
+namespace msf_updates {
 
-typedef msf_updates::SinglePoseSensorConfig Config_T;
+typedef msf_updates::PositionPoseSensorConfig Config_T;
 typedef dynamic_reconfigure::Server<Config_T> ReconfigureServer;
 typedef shared_ptr<ReconfigureServer> ReconfigureServerPtr;
 
-class PoseSensorManager : public msf_core::MSF_SensorManagerROS<
+class PositionPoseSensorManager : public msf_core::MSF_SensorManagerROS<
     msf_updates::EKFState> {
-  typedef PoseSensorHandler<msf_updates::pose_measurement::PoseMeasurement<>,
-      PoseSensorManager> PoseSensorHandler_T;
-  friend class PoseSensorHandler<msf_updates::pose_measurement::PoseMeasurement<>,
-      PoseSensorManager> ;
+  typedef PositionPoseSensorManager this_T;
+  typedef msf_pose_sensor::PoseSensorHandler<
+      msf_updates::pose_measurement::PoseMeasurement<>, this_T> PoseSensorHandler_T;
+  friend class msf_pose_sensor::PoseSensorHandler<
+      msf_updates::pose_measurement::PoseMeasurement<>, this_T>;
+  typedef msf_position_sensor::PositionSensorHandler<
+      msf_updates::position_measurement::PositionMeasurement, this_T> PositionSensorHandler_T;
+  friend class msf_position_sensor::PositionSensorHandler<
+      msf_updates::position_measurement::PositionMeasurement, this_T>;
  public:
   typedef msf_updates::EKFState EKFState_T;
   typedef EKFState_T::StateSequence_T StateSequence_T;
   typedef EKFState_T::StateDefinition_T StateDefinition_T;
 
-  PoseSensorManager(ros::NodeHandle pnh = ros::NodeHandle("~/pose_sensor")) {
-    bool distortmeas = false;  ///< Distort the pose measurements.
-
+  PositionPoseSensorManager(
+      ros::NodeHandle pnh = ros::NodeHandle("~/position_pose_sensor")) {
     imu_handler_.reset(
         new msf_core::IMUHandler_ROS<msf_updates::EKFState>(*this, "msf_core",
                                                             "imu_handler"));
+
+    bool distortmeas = false;  ///< Distort the pose measurements
+
     pose_handler_.reset(
         new PoseSensorHandler_T(*this, "", "pose_sensor", distortmeas));
-
     AddHandler(pose_handler_);
 
-    reconf_server_.reset(new ReconfigureServer(pnh));
-    ReconfigureServer::CallbackType f = boost::bind(&PoseSensorManager::Config,
-                                                    this, _1, _2);
-    reconf_server_->setCallback(f);
+    position_handler_.reset(
+        new PositionSensorHandler_T(*this, "", "position_sensor"));
+    AddHandler(position_handler_);
 
+    reconf_server_.reset(new ReconfigureServer(pnh));
+    ReconfigureServer::CallbackType f = boost::bind(&this_T::Config, this, _1,
+                                                    _2);
+    reconf_server_->setCallback(f);
+    //add by wuzida
     init_scale_srv_ = pnh.advertiseService("initialize_msf_scale",
-                                           &PoseSensorManager::InitScale, this);
-    init_height_srv_ = pnh.advertiseService("initialize_msf_height",
-                                            &PoseSensorManager::InitHeight,
-                                            this);
+                                             &PositionPoseSensorManager::InitScale, this);
+    //   init_height_srv_ = pnh.advertiseService("initialize_msf_height",
+    //                                           &PositionSensorManager::InitHeight,
+    //
   }
-  virtual ~PoseSensorManager() { }
+  virtual ~PositionPoseSensorManager() {
+  }
 
   virtual const Config_T& Getcfg() {
     return config_;
@@ -78,16 +91,13 @@ class PoseSensorManager : public msf_core::MSF_SensorManagerROS<
  private:
   shared_ptr<msf_core::IMUHandler_ROS<msf_updates::EKFState> > imu_handler_;
   shared_ptr<PoseSensorHandler_T> pose_handler_;
+  shared_ptr<PositionSensorHandler_T> position_handler_;
 
   Config_T config_;
-  ReconfigureServerPtr reconf_server_;
+  ReconfigureServerPtr reconf_server_;  ///< Dynamic reconfigure server.
+
+  //add by wuzida
   ros::ServiceServer init_scale_srv_;
-  ros::ServiceServer init_height_srv_;
-
-  /// Minimum initialization height. If a abs(height) is smaller than this value, 
-  /// no initialization is performed.
-  static constexpr double MIN_INITIALIZATION_HEIGHT = 0.01;
-
   /**
    * \brief Dynamic reconfigure callback.
    */
@@ -96,15 +106,18 @@ class PoseSensorManager : public msf_core::MSF_SensorManagerROS<
     pose_handler_->SetNoises(config.pose_noise_meas_p,
                              config.pose_noise_meas_q);
     pose_handler_->SetDelay(config.pose_delay);
-    if ((level & msf_updates::SinglePoseSensor_INIT_FILTER)
+
+    position_handler_->SetNoises(config.position_noise_meas);
+    position_handler_->SetDelay(config.position_delay);
+
+    if ((level & msf_updates::PositionPoseSensor_INIT_FILTER)
         && config.core_init_filter == true) {
-        MSF_WARN_STREAM(
-                "Config Init in 0");
       Init(config.pose_initial_scale);
       config.core_init_filter = false;
     }
+
     // Init call with "set height" checkbox.
-    if ((level & msf_updates::SinglePoseSensor_SET_HEIGHT)
+    if ((level & msf_updates::PositionPoseSensor_SET_HEIGHT)
         && config.core_set_height == true) {
       Eigen::Matrix<double, 3, 1> p = pose_handler_->GetPositionMeasurement();
       if (p.norm() == 0) {
@@ -114,77 +127,54 @@ class PoseSensorManager : public msf_core::MSF_SensorManagerROS<
         return;
       }
       double scale = p[2] / config.core_height;
-        MSF_WARN_STREAM(
-                "Config Init in 1");
       Init(scale);
       config.core_set_height = false;
     }
   }
-
   bool InitScale(sensor_fusion_comm::InitScale::Request &req,
-                 sensor_fusion_comm::InitScale::Response &res) {
-    ROS_INFO("Initialize filter with scale %f", req.scale);
-      MSF_WARN_STREAM(
-              "Config Init in 2");
-    Init(req.scale);
-    res.result = "Initialized scale";
-    return true;
+                   sensor_fusion_comm::InitScale::Response &res) {
+      ROS_INFO("Initialize filter with scale %f", req.scale);
+      Init(req.scale);
+      res.result = "Initialized scale";
+      return true;
   }
-
-  bool InitHeight(sensor_fusion_comm::InitHeight::Request &req,
-                  sensor_fusion_comm::InitHeight::Response &res) {
-    ROS_INFO("Initialize filter with height %f", req.height);
-    Eigen::Matrix<double, 3, 1> p = pose_handler_->GetPositionMeasurement();
-    if (p.norm() == 0) {
-      MSF_WARN_STREAM(
-          "No measurements received yet to initialize position. Height init "
-          "not allowed.");
-      return false;
-    }
-    std::stringstream ss;
-    if (std::abs(req.height) > MIN_INITIALIZATION_HEIGHT) {
-      double scale = p[2] / req.height;
-      Init(scale);
-      ss << scale;
-      res.result = "Initialized by known height. Initial scale = " + ss.str();
-    } else {
-      ss << "Height to small for initialization, the minimum is "
-          << MIN_INITIALIZATION_HEIGHT << "and " << req.height << "was set.";
-      MSF_WARN_STREAM(ss.str());
-      res.result = ss.str();
-      return false;
-    }
-    return true;
-  }
-
   void Init(double scale) const {
-    Eigen::Matrix<double, 3, 1> p, v, b_w, b_a, g, w_m, a_m, p_ic, p_vc, p_wv;
-    Eigen::Quaternion<double> q, q_wv, q_ic, q_cv;
+    Eigen::Matrix<double, 3, 1> p, v, b_w, b_a, g, w_m, a_m, p_ic, p_vc, p_wv,
+        p_ip, p_pos;
+    Eigen::Quaternion<double> q, q_wv, q_ic, q_vc;
     msf_core::MSF_Core<EKFState_T>::ErrorStateCov P;
 
     // init values
-    g << 0, 0, 9.8128;	        /// Gravity.
+    g << 0, 0, 9.81;	/// Gravity.
     b_w << 0, 0, 0;		/// Bias gyroscopes.
     b_a << 0, 0, 0;		/// Bias accelerometer.
 
     v << 0, 0, 0;			/// Robot velocity (IMU centered).
     w_m << 0, 0, 0;		/// Initial angular velocity.
 
-    P.setZero();  // Error state covariance; if zero, a default initialization in msf_core is used
+    q_wv.setIdentity();  // World-vision rotation drift.
+    p_wv.setZero();      // World-vision position drift.
+
+    P.setZero();  // Error state covariance; if zero, a default initialization in msf_core is used.
+
+    p_pos = position_handler_->GetPositionMeasurement();
 
     p_vc = pose_handler_->GetPositionMeasurement();
-    q_cv = pose_handler_->GetAttitudeMeasurement();
+    q_vc = pose_handler_->GetAttitudeMeasurement();
 
     MSF_INFO_STREAM(
-        "initial measurement pos:["<<p_vc.transpose()<<"] orientation: "<<STREAMQUAT(q_cv));
+        "initial measurement vision: pos:["<<p_vc.transpose()<<"] orientation: " <<STREAMQUAT(q_vc));
+    MSF_INFO_STREAM(
+        "initial measurement position: pos:["<<p_pos.transpose()<<"]");
 
     // Check if we have already input from the measurement sensor.
-    if (p_vc.norm() == 0)
+    if (!pose_handler_->ReceivedFirstMeasurement())
       MSF_WARN_STREAM(
-          "No measurements received yet to initialize position - using [0 0 0]");
-    if (q_cv.w() == 1)
+          "No measurements received yet to initialize vision position and attitude - "
+          "using [0 0 0] and [1 0 0 0] respectively");
+    if (!position_handler_->ReceivedFirstMeasurement())
       MSF_WARN_STREAM(
-          "No measurements received yet to initialize attitude - using [1 0 0 0]");
+          "No measurements received yet to initialize absolute position - using [0 0 0]");
 
     ros::NodeHandle pnh("~");
     pnh.param("pose_sensor/init/p_ic/x", p_ic[0], 0.0);
@@ -196,40 +186,47 @@ class PoseSensorManager : public msf_core::MSF_SensorManagerROS<
     pnh.param("pose_sensor/init/q_ic/y", q_ic.y(), 0.0);
     pnh.param("pose_sensor/init/q_ic/z", q_ic.z(), 0.0);
     q_ic.normalize();
-/*For KITTI modified by zida wu  
 
-    q.w() = 0.867789133081;//modify by zida wu
-    q.x() = 0.0127812016969;
-    q.y() = 0.0201438931533;
-    q.z() = 0.496359632684;
-    q.setIdentity();
-    p_wv.setZero();  //modify by zida wu 
-    q_wv = (q*q_ic*q_cv.conjugate()).conjugate(); //the first pose of IMU is unviable,so this equation doesnt work
+    MSF_INFO_STREAM("p_ic: " << p_ic.transpose());
+    MSF_INFO_STREAM("q_ic: " << STREAMQUAT(q_ic));
 
-*/
-///*
-    q_wv.setIdentity();  // Vision-world rotation drift.
-    p_wv.setZero();  // Vision-world position drift
+    pnh.param("position_sensor/init/p_ip/x", p_ip[0], 0.0);
+    pnh.param("position_sensor/init/p_ip/y", p_ip[1], 0.0);
+    pnh.param("position_sensor/init/p_ip/z", p_ip[2], 0.0);
 
-    // Calculate initial attitude and position based on sensor measurements.
+    // Calculate initial attitude and position based on sensor measurements
+    // here we take the attitude from the pose sensor and augment it with
+    // global yaw init.
+    double yawinit = config_.position_yaw_init / 180 * M_PI;
+    Eigen::Quaterniond yawq(cos(yawinit / 2), 0, 0, sin(yawinit / 2));
+    yawq.normalize();
 
-//  if (!pose_handler_->ReceivedFirstMeasurement()) {  //this judgement is always wrong, If there is no pose measurement, only apply q_wv.
-//   q = q_wv;
-//  } else {  // If there is a pose measurement, apply q_ic and q_wv to get initial attitude.
-    q = (q_ic * q_cv.conjugate() * q_wv).conjugate(); //this way will decrease the converge time of WI
+    q = yawq;
+    q_wv = (q * q_ic * q_vc.conjugate()).conjugate();
 
-//  }
+    MSF_WARN_STREAM("q_initial_wzd " << STREAMQUAT(q));
+    MSF_WARN_STREAM("q_wv_initial_wzd " << STREAMQUAT(q_wv));
 
-//    p.setZero();
-//*/
-    q.normalize();
-    p = p_wv + q_wv.conjugate().toRotationMatrix() * p_vc / scale
-          - q.toRotationMatrix() * p_ic;
+    Eigen::Matrix<double, 3, 1> p_vision = q_wv.conjugate().toRotationMatrix()
+        * p_vc / scale - q.toRotationMatrix() * p_ic;
 
-    a_m = q.inverse() * g;			/// Initial acceleration.
+    //TODO (slynen): what if there is no initial position measurement? Then we
+    // have to shift vision-world later on, before applying the first position
+    // measurement.
+    p = p_pos - q.toRotationMatrix() * p_ip;
+    p_wv = p - p_vision;  // Shift the vision frame so that it fits the position
+    // measurement
+
+    a_m = q.inverse() * g;			    /// Initial acceleration.
+
+    //TODO (slynen) Fix this.
+    //we want z from vision (we did scale init), so:
+//    p(2) = p_vision(2);
+//    p_wv(2) = 0;
+//    position_handler_->adjustGPSZReference(p(2));
 
     // Prepare init "measurement"
-    // True means that this message contains initial sensor readings.
+    // True means that we will also set the initial sensor readings.
     shared_ptr < msf_core::MSF_InitMeasurement<EKFState_T>
         > meas(new msf_core::MSF_InitMeasurement<EKFState_T>(true));
 
@@ -244,20 +241,20 @@ class PoseSensorManager : public msf_core::MSF_SensorManagerROS<
     meas->SetStateInitValue < StateDefinition_T::p_wv > (p_wv);
     meas->SetStateInitValue < StateDefinition_T::q_ic > (q_ic);
     meas->SetStateInitValue < StateDefinition_T::p_ic > (p_ic);
+    meas->SetStateInitValue < StateDefinition_T::p_ip > (p_ip);
 
     SetStateCovariance(meas->GetStateCovariance());  // Call my set P function.
     meas->Getw_m() = w_m;
     meas->Geta_m() = a_m;
     meas->time = ros::Time::now().toSec();
-
+    MSF_WARN_STREAM("Initialized success wuzida");
     // Call initialization in core.
     msf_core_->Init(meas);
-
   }
 
   // Prior to this call, all states are initialized to zero/identity.
   virtual void ResetState(EKFState_T& state) const {
-    //set scale to 1
+    // Set scale to 1.
     Eigen::Matrix<double, 1, 1> scale;
     scale << 1.0;
     state.Set < StateDefinition_T::L > (scale);
@@ -309,6 +306,7 @@ class PoseSensorManager : public msf_core::MSF_SensorManagerROS<
       EKFState_T& delaystate,
       const EKFState_T& buffstate,
       Eigen::Matrix<double, EKFState_T::nErrorStatesAtCompileTime, 1>& correction) const {
+
     UNUSED(buffstate);
     UNUSED(correction);
 
@@ -323,6 +321,5 @@ class PoseSensorManager : public msf_core::MSF_SensorManagerROS<
     }
   }
 };
-
 }
-#endif // POSE_MEASUREMENTMANAGER_H
+#endif  // POSITION_POSE_SENSOR_MANAGER_H
