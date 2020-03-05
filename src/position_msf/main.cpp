@@ -18,12 +18,12 @@
  */
 #include "position_sensormanager.h"
 
+
 int main(int argc, char** argv) {
   ros::init(argc, argv, "msf_position_sensor");
 
-  msf_position_sensor::PositionSensorManager manager;
+    msf_position_sensor::PositionSensorManager manager;
+    ros::spin();
 
-  ros::spin();
-
-  return 0;
+    return 0;
 }

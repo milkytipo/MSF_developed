@@ -66,7 +66,7 @@ PoseSensorHandler<MEASUREMENT_TYPE, MANAGER_TYPE>::PoseSensorHandler(
   MSF_INFO_STREAM_COND(!provides_absolute_measurements_, "Pose sensor is "
                        "handling measurements as relative values");
 
-  ros::NodeHandle nh("msf_updates/" + topic_namespace);
+  ros::NodeHandle nh("msf_updates_slam/" + topic_namespace);
   subPoseWithCovarianceStamped_ =
       nh.subscribe < geometry_msgs::PoseWithCovarianceStamped
           > ("pose_with_covariance_input", 20, &PoseSensorHandler::MeasurementCallback, this);

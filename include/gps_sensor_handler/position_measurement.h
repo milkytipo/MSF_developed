@@ -158,7 +158,7 @@ struct PositionMeasurement : public PositionMeasurementBase {
       Eigen::Matrix<double, nMeasurements,
           msf_core::MSF_Core<EKFState_T>::nErrorStatesAtCompileTime> H_new;
       Eigen::Matrix<double, nMeasurements, 1> r_old;
-        MSF_WARN_STREAM("Check the GPS H status!!");
+      MSF_WARN_STREAM("***GPS H Matrix is calculating***");
       CalculateH(state_nonconst_new, H_new);
 
       // Get rotation matrices.

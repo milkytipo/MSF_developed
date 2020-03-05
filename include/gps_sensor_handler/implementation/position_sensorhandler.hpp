@@ -31,7 +31,12 @@ PositionSensorHandler<MEASUREMENT_TYPE, MANAGER_TYPE>::PositionSensorHandler(
                                            parameternamespace),
       n_zp_(1e-6),
       delay_(0) {
-  ros::NodeHandle pnh("~/position_sensor");
+  ros::NodeHandle pnh ("~/" + parameternamespace);
+
+  MSF_INFO_STREAM(
+            "Loading parameters for position sensor from namespace: "
+                    << pnh.getNamespace());
+
   pnh.param("position_use_fixed_covariance", use_fixed_covariance_, false);
   pnh.param("position_absolute_measurements", provides_absolute_measurements_,
             false);
@@ -48,7 +53,7 @@ PositionSensorHandler<MEASUREMENT_TYPE, MANAGER_TYPE>::PositionSensorHandler(
   MSF_INFO_STREAM_COND(!provides_absolute_measurements_, "Position sensor is "
                        "handling measurements as relative values");
 
-  ros::NodeHandle nh("msf_updates");
+  ros::NodeHandle nh("msf_updates_gps");
 
   subPointStamped_ =
       nh.subscribe<geometry_msgs::PointStamped>
@@ -186,7 +191,7 @@ void PositionSensorHandler<MEASUREMENT_TYPE, MANAGER_TYPE>::MeasurementCallback(
   if (!referenceinit) {
     gpsConversion_.InitReference(msg->latitude, msg->longitude, msg->altitude);
     MSF_WARN_STREAM(
-        "Initialized GPS reference of topic: " << this->topic_namespace_ << "/"
+        "Initialized GPS reference of topic: " << this->topic_namespace_ << " "
             << subNavSatFix_.getTopic() << " to lat/lon/alt: [" << msg->latitude
             << ", " << msg->longitude << ", " << msg->altitude << "]");
     referenceinit = true;

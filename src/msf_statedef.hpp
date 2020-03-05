@@ -1,4 +1,4 @@
-/*
+*
  * Copyright (C) 2012-2013 Simon Lynen, ASL, ETH Zurich, Switzerland
  * You can contact the author at <slynen at ethz dot ch>
  *

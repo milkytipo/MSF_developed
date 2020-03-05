@@ -173,10 +173,11 @@ struct PoseMeasurement : public PoseMeasurementBase {
 
     // Preprocess for elements in H matrix.
     Eigen::Matrix<double, 3, 1> vecold;
-//output the core state on the screen
-MSF_INFO_STREAM("the fixed q :"<<STREAMQUAT(state.Get<StateDefinition_T::q>()));
-MSF_INFO_STREAM("the fixed qwv :"<<STREAMQUAT(state.Get<StateQwvIdx>()));
-MSF_INFO_STREAM("the fixed pwv :"<<state.Get<StatePwvIdx>());
+
+    //output the core state on the screen -wuzida
+//    MSF_INFO_STREAM("the fixed q :"<<STREAMQUAT(state.Get<StateDefinition_T::q>()));
+//    MSF_INFO_STREAM("the fixed qwv :"<<STREAMQUAT(state.Get<StateQwvIdx>()));
+//    MSF_INFO_STREAM("the fixed pwv :"<<state.Get<StatePwvIdx>());
 
     vecold = (-state.Get<StatePwvIdx>() + state.Get<StateDefinition_T::p>()
         + C_q * state.Get<StatePicIdx>()) * state.Get<StateLIdx>();
@@ -293,7 +294,7 @@ MSF_INFO_STREAM("the fixed pwv :"<<state.Get<StatePwvIdx>());
       Eigen::Matrix<double, nMeasurements,
           msf_core::MSF_Core<EKFState_T>::nErrorStatesAtCompileTime> H_new;
       Eigen::Matrix<double, nMeasurements, 1> r_old;
-
+      MSF_WARN_STREAM("SLAM H Matrix is calculating");
       CalculateH(state_nonconst_new, H_new);
 
       // Get rotation matrices.
