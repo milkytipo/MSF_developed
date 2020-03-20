@@ -1,7 +1,7 @@
 <launch>
-    <node name="read_interface" pkg="ai_robot_lcsfl" type="read_node"  args ="/home/wuzida/data/KITTI/RawDataFixed/2011_10_03/2011_10_03_drive_0027 fixed
-" clear_params="true" output="screen">
-    </node>
+<!--     <node name="read_interface" pkg="ai_robot_lcsfl" type="read_node"  args ="/home/wuzida/data/KITTI/RawDataFixed/2011_10_03/2011_10_03_drive_0027 noised-03 -->
+<!-- " clear_params="true" output="screen"> -->
+<!--     </node> -->
 
     <node name="vision_sensor" pkg="ai_robot_lcsfl" type="lcsfl_node"  clear_params="true" output="screen">
 
@@ -11,7 +11,7 @@
 		<remap from="msf_updates_slam/transform_input" to="/slam/tf" />
 		<remap from="msf_updates_gps/navsatfix_input" to="/gps/fix" />
 
-		<rosparam file="$(find ai_robot_lcsfl)/position_sensor_fix.yaml"/>
+		<rosparam file="$(find ai_robot_lcsfl)/position_pose_sensor_fix.yaml"/>
     </node>
 
     <node pkg="rosservice" type="rosservice" name="initialize_gps" args="call --wait /vision_sensor/position_sensor/initialize_msf_scale 1"/>
@@ -19,9 +19,11 @@
     <node pkg="rosservice" type="rosservice" name="initialize_fusion" args="call --wait /vision_sensor/position_pose_sensor/initialize_msf_scale 1"/>
 <!--    <node name="transferTool" pkg = "publishandsubscribe" type= "transtopic_node" output="screen" /> -->
 
-<!--     <node name="runslam" pkg = "ORB_SLAM2" type= "Stereo" args = "/home/wuzida/ORB_SLAM2/Vocabulary/ORBvoc.txt /home/wuzida/ORB_SLAM2/Examples/Stereo/KITTI04-12.yaml false" output="screen" /> -->
-
-
+<!--    <node name="runslam" pkg = "ORB_SLAM2" type= "Stereo" args = "/home/wuzida/ORB_SLAM2/Vocabulary/ORBvoc.txt /home/wuzida/ORB_SLAM2/Examples/Stereo/KITTI04-12.yaml false" output="screen" /> -->
 
 </launch>
+
+
+
+
 

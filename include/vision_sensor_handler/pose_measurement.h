@@ -285,7 +285,7 @@ struct PoseMeasurement : public PoseMeasurementBase {
    */
   virtual void Apply(shared_ptr<EKFState_T> state_nonconst_new,
                      msf_core::MSF_Core<EKFState_T>& core) {
-
+      MSF_WARN_STREAM("SLAM H Matrix is calculating");
     if (isabsolute_) {  // Does this measurement refer to an absolute measurement,
       // or is is just relative to the last measurement.
       // Get a const ref, so we can read core states
@@ -294,7 +294,6 @@ struct PoseMeasurement : public PoseMeasurementBase {
       Eigen::Matrix<double, nMeasurements,
           msf_core::MSF_Core<EKFState_T>::nErrorStatesAtCompileTime> H_new;
       Eigen::Matrix<double, nMeasurements, 1> r_old;
-      MSF_WARN_STREAM("SLAM H Matrix is calculating");
       CalculateH(state_nonconst_new, H_new);
 
       // Get rotation matrices.

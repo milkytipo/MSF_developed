@@ -124,8 +124,8 @@ void PositionSensorHandler<MEASUREMENT_TYPE, MANAGER_TYPE>::ProcessPositionMeasu
 
   z_p_ = meas->z_p_;  // Store this for the init procedure.
 
-//    MSF_WARN_STREAM(
- //           "Initialized Success_wzd: z: " << meas->z_p_);
+//  MSF_WARN_STREAM(
+//            "Zida: Core bias of IMU_bw: " << meas-> Get<StateDefinition_T::b_w>() << "b_a: " << meas->b_a);
 
   this->manager_.msf_core_->AddMeasurement(meas);
 }

@@ -19,3 +19,8 @@
     <node pkg="tf2_ros" type="static_transform_publisher" name="imu_to_odom" args="0 0 0 0 0 0 1 world odomg" />
     <node pkg="tf2_ros" type="static_transform_publisher" name="imu_to_slam" args="0 0 0 0 0 0 1 world  " />
 </launch>
+<!--     <node name = "playbag" pkg="rosbag" type="play" args="--clock /home/wuzida/data/2020-02-26-00-15-26.bag --pause" output = "screen"> -->
+<!--         <remap from="/kitti/camera_color_left/image_raw" to="/camera/left/image_raw" /> -->
+<!--         <remap from="/kitti/camera_color_right/image_raw" to="/camera/right/image_raw" /> -->
+<!--         <remap from="/kitti/oxts/gps/fix" to="/kitti/oxts/gps/fix" />        -->
+<!--     </node> -->
