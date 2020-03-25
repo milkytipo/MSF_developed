@@ -8,7 +8,7 @@
 
 #########IMU PARAMETERS#######
 #######  #The range of the noises were set in MSF_Core.cfg, you cannot set the value beyond the range(threshold),or it will be not effective
-core/core_noise_acc: 0.5 #2.0000e-3  #according by EuRoc  
+core/core_noise_acc: 0.5 #2.0000e-3  # EuRoc has those parameters, but KITTI does not.
 core/core_noise_accbias: 0.05 #3.0000e-3  
 core/core_noise_gyr: 0.05 #1.6968e-04 
 core/core_noise_gyrbias: 0.005 #1.9393e-05
@@ -24,7 +24,7 @@ core/core_noise_gyrbias: 0.005 #1.9393e-05
 /vision_sensor/pose_sensor/pose_noise_meas_q: 0.02
 /vision_sensor/pose_sensor/pose_initial_scale: 1
 
-# initialization of camera w.r.t. IMU
+# initialization of camera w.r.t. IMU, for KITTI
 #set by offline calibration 
 #warning: msf's transform is inverse from the KITTI, so if you see sawtooth trajectory, you should notice it.
 /vision_sensor/pose_sensor/init/q_ic/w: -0.4975 #0.4975
