@@ -8,7 +8,7 @@
 		<remap from="msf_core/hl_state_input" to="/fcu/ekf_state_out" />
 		<remap from="msf_core/correction" to="/fcu/ekf_state_in" />
 		<remap from="msf_core/imu_state_input" to="/imu"  />
-		<remap from="msf_updates_slam/transform_input" to="/slam/tf1" />
+		<remap from="msf_updates_slam/transform_input" to="/slam/tf" />
 		<remap from="msf_updates_gps/navsatfix_input" to="/gps/fix" />
 
 		<rosparam file="$(find ai_robot_lcsfl)/position_pose_sensor_fix.yaml"/>
