@@ -23,7 +23,7 @@ using namespace std;
 using namespace Eigen;
 
 #define SEQ_END 9999999999
-#define GPS_DIV_FREQ  100 //used to control the GPS and IMU freq
+#define GPS_DIV_FREQ  1 //used to control the GPS and IMU freq
 #define SENSOR_SLEEP_TIME 15 //7 //used to control the sleep time between two loop
 
 Eigen::Matrix3d c1Rc0, c0Rc1;
