@@ -40,12 +40,12 @@ Please note that, the dataset I used follows the files structure follows this to
 
 **Solutions:**
 At first, the figure shown below is about the whole architecture about msf. 
-<div align = center><img width = "600" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/MSF_Geometry_Constraint.png" /></div>
+<div align = center><img width = "630" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/MSF_Geometry_Constraint.png" /></div>
 
 We can sperately introduce the SLAM-IMU sub-framework and GPS-IMU sub-framework. Let's see the Jacobi matrix and the geometry constraint as follows.
 
-<div align = center><img width = "600" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/SLAM-IMU_Frame.png" />
-<img width = "600" height ="400" src ="https://https://github.com/milkytipo/MSF_developed/blob/master/images/GPS-IMU_Frame.png" /></div>
+<div align = center><img width = "630" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/SLAM-IMU_Frame.png" />
+<img width = "630" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/GPS-IMU_Frame.png" /></div>
 
 If you have comprehended the MSF and Error-state Kalman Filter well, you can understand each iterm in Jacobi meaning what. For example, as you can see, the SLAM observation in SLAM-IMU framework can calibrate every error-state except for Δb.
 
