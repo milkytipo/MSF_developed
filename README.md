@@ -40,12 +40,12 @@ Please note that, the dataset I used follows the files structure follows this to
 
 **Solutions:**
 At first, the figure shown below is about the whole architecture about msf. 
-<div align = center><img width = "550" height ="390" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/MSF_Geometry_Constraint.png" /></div>
+<div align = center><img width = "600" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/MSF_Geometry_Constraint.png" /></div>
 
 We can sperately introduce the SLAM-IMU sub-framework and GPS-IMU sub-framework. Let's see the Jacobi matrix and the geometry constraint as follows.
 
-<div align = center><img width = "550" height ="390" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/SLAM-IMU_Frame.png" />
-<img width = "550" height ="390" src ="https://https://github.com/milkytipo/MSF_developed/blob/master/images/GPS-IMU_Frame.png" /></div>
+<div align = center><img width = "600" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/SLAM-IMU_Frame.png" />
+<img width = "600" height ="400" src ="https://https://github.com/milkytipo/MSF_developed/blob/master/images/GPS-IMU_Frame.png" /></div>
 
 If you have comprehended the MSF and Error-state Kalman Filter well, you can understand each iterm in Jacobi meaning what. For example, as you can see, the SLAM observation in SLAM-IMU framework can calibrate every error-state except for Δb.
 
@@ -109,16 +109,18 @@ There is an important class which you should notice: [msf_core::MSF_Core](http:/
 
 ### Run MSF_developed and Visualization
 
->  roslaunch ai_robot_lcsfl KITTI_start.launch
-
+```
+ roslaunch ai_robot_lcsfl KITTI_start.launch
+```
 After the MSF and ORB_SLAM2 have all started:
 
-> rosrun ai_robot_lcsfl read_node /(your_root_path)/KITTI/RawDataFixed/2011_10_03/2011_10_03_drive_0027 noised-zida
-
+```
+rosrun ai_robot_lcsfl read_node /(your_root_path)/KITTI/RawDataFixed/2011_10_03/2011_10_03_drive_0027 noised-zida
+```
 **Note:** I named the noised file as noised-zida, you can change the GPS noised setting and generate your own noised data. Of course, you can use raw GPS data.
-
-> rosbag record /imu /gps/fix /msf_core/pose /slam/tf
-
+```
+rosbag record /imu /gps/fix /msf_core/pose /slam/tf
+```
 Keep the bag files in order to plot the trajectory.
 
 ------
@@ -136,9 +138,9 @@ Then, you can see the trajectory like this:
 ### **P.S. 2 A Simple RMSE calculator for SLAM/MSF/GPS**
 
 I also add the calcuateError function in [plotTrajectory](https://github.com/milkytipo/plotTrajectory). If you do not change the output filename in extract_topics_from_rosbag.py, you just directly run:
-
->python calculateError.py
-
+```
+python calculateError.py
+```
 **Note:** As we all know, KITTI didn't provide the groudtruth about the trajectory, so **I suppose the original fixed GPS as the groudtruth and use the GPS-noised as the GPS input**. Then, through comparing the GPS-noised and MSF_developed results, you can value the effect about the framework.
 ### RMSE excel
 
