@@ -12,7 +12,7 @@ ETH的MSF是一个非常优秀的多源传感器融合（松耦合）开源框�
 In order to make it convenient for researcher to understand and run the *MSF_developed* framework (because the original version is a little hard to use), I have to claim something about that at first. The details about those will be discussed one by one.
 > * You have to preprocess the KITTI dataset, since [the KITTI dataset and its kitti to bag tools][3] have some "bugs".
 > * [Original MSF paper][1] has some mistakes about equations, it will probably puzzle you especially when you run the MSF algorithm at the same time. What's more, the symbols (such as *q_wv*, *q_ic*) in the MSF code don't follow the roles in his papers which also perplexs researchers.
-> * The code in original MSF is not concise enough, so I put the MSF as the lib and develop the *MSF_developed* to make users fully master how to run the framework. Moreover, I have fixed some bugs and time setting in MSF (if you use MSF firstly you have large probability get troubles about the timestamp), so I recommmend you use my [MSF_developed][2] as your MSF choice.
+> * The code in original MSF is not concise enough, so I put the MSF as the lib and develop the *MSF_developed* to make users fully master how to run the framework. Moreover, I have fixed some bugs and time setting in MSF (if you use MSF firstly you have large probability get troubles about the timestamp), so I recommmend you use my [ethzasl_msf][2] as your MSF choice.
 > * You have to fully understand parameters in the [position_pose_sensor_fix.yaml][yaml], since I think it contains the core idea of the MSF design.
 
 Okay, now I will discuss the problems one bye one. I will tell you how to fix it and which tools you should use. After those a brief demo would be given to show how to run the **MSF_developed**.
@@ -130,7 +130,7 @@ rosbag record /imu /gps/fix /msf_core/pose /slam/tf
 Keep the bag files in order to plot the trajectory.
 
 ------
-### **P.S. 1 A Simple Visualization Tool for SLAM/MSF/GPS trajectory**
+### **P.S. 1 A Simple Visualization Tool for SLAM/MSF/GPS trajectory - plotTrajectory**
 
 I developed a simple tool to plot the trajectory, called [plotTrajectory](https://github.com/milkytipo/plotTrajectory)
 
@@ -140,9 +140,10 @@ I developed a simple tool to plot the trajectory, called [plotTrajectory](https:
 
 Then, you can see the trajectory like this:
 <div align = center><img width = "600" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/MSF-SLAM-GPS.png" /></div>
+<div align = center><img width = "600" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/MSF_noised_results/noised03-GPS-MSF-Front.png" /></div>
 
-### **P.S. 2 A Error Calculator Tool for SLAM/MSF/GPS**
-If you want to obtain the RMSE, STD, MAE and other error items, I recommend you the [evo](https://github.com/MichaelGrupp/evo) tool. In addition, I have transfered the KITTI groudtruth file into a general format for MSF error evaluation, namely [kitti_00_groudtruth.tum]( ). 
+### **P.S. 2 A Error Calculator Tool for SLAM/MSF/GPS - evo**
+If you want to obtain the RMSE, STD, MAE and other error items, I recommend you the [evo](https://github.com/MichaelGrupp/evo) tool. In addition, I have transfered the KITTI groudtruth file into a general format for MSF error evaluation, namely [kitti_00_groudtruth.tum](https://github.com/milkytipo/MSF_developed/blob/master/MSF_noised_results/kitti_00_groudtruth.tum). 
 
 **Note:** I recommed you use this groudtruth file, in case you spend lots of time to do the same work as I have done.
 
@@ -159,17 +160,19 @@ evo_ape tum kitti_00_groudtruth.tum pose.tum -v -a -p
 ```
 evo_rpe tum kitti_00_groudtruth.tum pose.tum -v -a -p
 ```
-
 I use the [KITTI-Interpre][4] to generate a noised-03 oxts, then the msf results are as follow:
+<div align = center><img width = "600" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/MSF_noised_results/noised03-APE.png" /></div>
+<div align = center><img width = "600" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/MSF_noised_results/noised02-APE-MAP.png" /></div>
+
 ### Noised-03 APE RMSE excel
 
-| Type        | MSF_developed   |  GPS-noised  |
-| --------   | -----:  | :----:  |
-| RMSE     | 9.219306 |   TODO   |
-| STD       |  5.023872   |  None   |
-| Mean       |  7.730220   |  None   |
+| Type        | MSF_developed   |  GPS-noised  | ORB_SLAM2  |
+| --------   |:----:  | :----:  |:----:  |
+| RMSE     | 9.219306 |   TODO   | TODO   |
+| STD       |  5.023872   |  TODO   | TODO   |
+| Mean       |  7.730220   |  TODO   | TODO   |
 
-**Note:** I have tested four noised GPS conditions, and the results are contained in the [MSF_noised_results]()
+**Note:** I have tested four noised GPS conditions, and the results are contained in the [MSF_noised_results](https://github.com/milkytipo/MSF_developed/tree/master/MSF_noised_results)
 
 [1]: https://ieeexplore.ieee.org/document/6696917/authors#authors
 [2]: https://github.com/milkytipo/ethzasl_msf
