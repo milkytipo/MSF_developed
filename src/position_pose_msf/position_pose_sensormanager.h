@@ -247,7 +247,7 @@ class PositionPoseSensorManager : public msf_core::MSF_SensorManagerROS<
     meas->Getw_m() = w_m;
     meas->Geta_m() = a_m;
     meas->time = ros::Time::now().toSec();
-    MSF_WARN_STREAM("Initialized success wuzida");
+    MSF_WARN_STREAM("Initialized success");
     // Call initialization in core.
     msf_core_->Init(meas);
   }

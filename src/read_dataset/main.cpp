@@ -23,7 +23,7 @@ using namespace std;
 using namespace Eigen;
 
 #define SEQ_END 9999999999
-#define GPS_DIV_FREQ  1 //used to control the GPS and IMU freq
+#define GPS_DIV_FREQ  100 //used to control the GPS and IMU freq
 #define SENSOR_SLEEP_TIME 15 //7 //used to control the sleep time between two loop
 
 Eigen::Matrix3d c1Rc0, c0Rc1;
@@ -279,36 +279,13 @@ int main(int argc, char** argv) {
         //sleep function, set this value to control the publishment frequency
          std::this_thread::sleep_for(std::chrono::milliseconds(SENSOR_SLEEP_TIME));
         }
-        //           if (itPairTimeType->second == CAM)
-        //          {
-        //              Eigen::Matrix<double, 4, 4> pose;
-        //              estimator.getPoseInWorldFrame(pose);
-        //                if (outFile != NULL)
-        //                    fprintf(outFile, "%f %f %f %f %f %f %f %f %f %f %f %f\n",
-        //                            pose(0, 0), pose(0, 1), pose(0, 2), pose(0, 3),
-        //                            pose(1, 0), pose(1, 1), pose(1, 2), pose(1, 3),
-        //                            pose(2, 0), pose(2, 1), pose(2, 2), pose(2, 3));
-        //                Eigen::Matrix<double, 4, 4> Tic1;
-        //                estimator.getEstimatedExPara(0,Tic1);
-        //                std::cout<< "-------\n" << Tic1 <<std::endl;
-        //                Eigen::Matrix<double, 4, 4> Tic2;
-        //                estimator.getEstimatedExPara(1,Tic2);
-        //                std::cout<< "-------\n"<< Tic2 <<std::endl;
-        //cv::imshow("leftImage", imLeft);
-        //cv::imshow("rightImage", imRight);
-        //cv::waitKey(2);
-        //           }
 
         }
         else
         break;
 
     }
-    //    if(outFile != NULL)
-    //        fclose (outFile);
-    //    ROS_INFO("####### SYSTEM END ################");
-    ////    if(tmp_outFile != NULL)
-    ////        fclose (tmp_outFile);
+
 
 ros::spin();
 

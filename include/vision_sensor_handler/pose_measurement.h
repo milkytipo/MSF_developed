@@ -174,10 +174,10 @@ struct PoseMeasurement : public PoseMeasurementBase {
     // Preprocess for elements in H matrix.
     Eigen::Matrix<double, 3, 1> vecold;
 
-    //output the core state on the screen -wuzida
-//    MSF_INFO_STREAM("the fixed q :"<<STREAMQUAT(state.Get<StateDefinition_T::q>()));
-//    MSF_INFO_STREAM("the fixed qwv :"<<STREAMQUAT(state.Get<StateQwvIdx>()));
-//    MSF_INFO_STREAM("the fixed pwv :"<<state.Get<StatePwvIdx>());
+    //Output the core state on the screen -wuzida
+//    MSF_INFO_STREAM("the fixed q :"<< STREAMQUAT(state.Get<StateDefinition_T::q>()));
+//    MSF_INFO_STREAM("the fixed qwv :"<< STREAMQUAT(state.Get<StateQwvIdx>()));
+//    MSF_INFO_STREAM("the fixed pwv :"<< state.Get<StatePwvIdx>());
 
     vecold = (-state.Get<StatePwvIdx>() + state.Get<StateDefinition_T::p>()
         + C_q * state.Get<StatePicIdx>()) * state.Get<StateLIdx>();
@@ -285,10 +285,11 @@ struct PoseMeasurement : public PoseMeasurementBase {
    */
   virtual void Apply(shared_ptr<EKFState_T> state_nonconst_new,
                      msf_core::MSF_Core<EKFState_T>& core) {
-      MSF_WARN_STREAM("SLAM H Matrix is calculating");
+
     if (isabsolute_) {  // Does this measurement refer to an absolute measurement,
       // or is is just relative to the last measurement.
       // Get a const ref, so we can read core states
+//      MSF_WARN_STREAM("***SLAM H Matrix is calculating***");
       const EKFState_T& state = *state_nonconst_new;
       // init variables
       Eigen::Matrix<double, nMeasurements,

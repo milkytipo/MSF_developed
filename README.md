@@ -7,7 +7,7 @@ Authors: [Zida Wu](https://github.com/milkytipo), [Zheng Gong](https://github.co
 
 MSF is a good algorithm, but obviously, the code and the theory are really not friendly to a researcher. I think that's why there are few people want to develop it further. So I just summarize my experience, hoping the later people could run it as soon as possbile. MSF is good algorithm, if you can run it well, it must give you some insightful ideas about the sensor fusion.
 
-ETH的MSF是一个非常优秀的松耦合开源框架，尽管是松耦合，但是最终经过修改和调试后的MSF的效果依然让我觉得非常惊喜。同时由于MSF原始代码非常的不优美简洁，所以我特地将MSF源码作为一个“库”来使用，而将我们可以扩展和开发的部分单独提取出来开发成MSF_developed，这样对代码理解和使用会有更好的帮助。需要提前说明的是，由于原始MSF文章公式的错误和代码的问题，导致研究者者直接阅读代码和看文章公式推导会存在疑惑，这里我都将一一解答。此外，鉴于KITTI数据集本身的缺陷，以及跑MSF的需要等原因，要想完整跑出理想MSF效果，需要KITTI数据预处理、MSF源码修改，GPS加噪声（可选），ORBSLAM2的publish位姿的话题（topic），轨迹显示等各项操作，不过我已经全部一条龙在本Readme中进行说明和解释，Good Luck！如果觉得有用，给个star吧！hhhhhh
+ETH的MSF是一个非常优秀的多源传感器融合（松耦合）开源框架，尽管是松耦合，但是最终经过修改和调试后的MSF的效果依然让我觉得非常惊喜。同时由于MSF原始代码非常的不优美简洁，所以我特地将MSF源码作为一个“库”来使用，而将我们可以扩展和开发的部分单独提取出来开发成MSF_developed，这样对代码理解和使用会有更好的帮助。需要提前说明的是，由于原始MSF文章公式的错误和代码的问题，导致研究者者直接阅读代码和看文章公式推导会存在疑惑，这里我都将一一解答。此外，鉴于KITTI数据集本身的缺陷，以及跑MSF的需要等原因，要想完整跑出理想MSF效果，需要KITTI数据预处理、MSF源码修改，GPS加噪声（可选），ORBSLAM2的publish位姿的话题（topic），轨迹显示等各项操作，不过我已经全部一条龙在本Readme中进行说明和解释，Good Luck！如果觉得有用，给个star吧！hhhhhh
 
 In order to make it convenient for researcher to understand and run the *MSF_developed* framework (because the original version is a little hard to use), I have to claim something about that at first. The details about those will be discussed one by one.
 > * You have to preprocess the KITTI dataset, since [the KITTI dataset and its kitti to bag tools][3] have some "bugs".
@@ -72,7 +72,7 @@ The only thing I should mention is about the IMU. If the dataset doesn't provide
 
 Generally, you should use the angle/velocity random walk ( or "white nosie") to set the *core_noise_acc*, and use the  (angle/velocity) rate random walk to set the *core_noise_accbias*. ( I used the noise name from the original Allan paper ["Analysis and Modeling of Inertial Sensors Using Allan Variance"](https://ieeexplore.ieee.org/document/4404126), in other tools, they called the angular random walk into "while noise", and call rate random walk into "bias" or "random walk". Seriously, I think they are not rigorous. Additionally, if you cannot obain the rate random walk, you can use the bias instability to replace it.
 
-Parameter values are very very important for MSF, watch out!
+Parameter values are very very important for MSF, be careful!Z
 
 ## **MSF_developed Method Structure**
 MSF_developed
@@ -100,6 +100,12 @@ p.s.2 Initialization is called by the method msf_core::Init() (in the msf_core_i
 **_measurement.h** is in charege of calculating the Jacobi H matrix (by .Apply() method) and residual r matrix. Further, to accomplish the Kalman update process. (by .CalculateAndApplyCorrection() method)
 
 There is an important class which you should notice: [msf_core::MSF_Core](http://ethz-asl.github.io/ethzasl_msf/html/classmsf__core_1_1MSF__Core.html), which is in charge of the IMU pose information, measurement management and the state buffer management.
+
+**debug tips**:
+1. if you want to check whether the GPS sensor fusion or SLAM sensor fusion are working on well or not, you can directly cancel the annotation of the MSF_WARN_STREAM("\***GPS H Matrix is calculating***") in position_measurement.h and the MSF_WARN_STREAM("\***SLAM H Matrix is calculating***") in pose_measurement.h.
+2. if you want to obtain the real time core state display, you just need to cancel the annotation of the the MSF_INFO_STREAM("the fixed pwv :"<< **xxxxxx**) in pose_measurement.h.
+
+(I know the debug way is a little stupid... but they are simple as well as efficient.)
 
 ## **KITTI Example**
 
@@ -135,19 +141,35 @@ I developed a simple tool to plot the trajectory, called [plotTrajectory](https:
 Then, you can see the trajectory like this:
 <div align = center><img width = "600" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/MSF-SLAM-GPS.png" /></div>
 
-### **P.S. 2 A Simple RMSE calculator for SLAM/MSF/GPS**
+### **P.S. 2 A Error Calculator Tool for SLAM/MSF/GPS**
+If you want to obtain the RMSE, STD, MAE and other error items, I recommend you the [evo](https://github.com/MichaelGrupp/evo) tool. In addition, I have transfered the KITTI groudtruth file into a general format for MSF error evaluation, namely [kitti_00_groudtruth.tum]( ). 
 
-I also add the calcuateError function in [plotTrajectory](https://github.com/milkytipo/plotTrajectory). If you do not change the output filename in extract_topics_from_rosbag.py, you just directly run:
+**Note:** I recommed you use this groudtruth file, in case you spend lots of time to do the same work as I have done.
+
+After you have run the MSF_developed algorithm and recorded the /slam/tf, /msf_core/pose, /imu and /gps/fix topics, you can use evo to estimate the error levels.
+
+First, save the topics in bag into .tum. Use the command below to general *pose.tum* file.
 ```
-python calculateError.py
+evo_traj bag MSF_developed_fusion.bag /msf_core/pose --save_as_tum
 ```
-**Note:** As we all know, KITTI didn't provide the groudtruth about the trajectory, so **I suppose the original fixed GPS as the groudtruth and use the GPS-noised as the GPS input**. Then, through comparing the GPS-noised and MSF_developed results, you can value the effect about the framework.
-### RMSE excel
+Second, evaluate the error between kitti_00_groudtruth.tum and pose.tum.
+```
+evo_ape tum kitti_00_groudtruth.tum pose.tum -v -a -p
+```
+```
+evo_rpe tum kitti_00_groudtruth.tum pose.tum -v -a -p
+```
+
+I use the [KITTI-Interpre][4] to generate a noised-03 oxts, then the msf results are as follow:
+### Noised-03 APE RMSE excel
 
 | Type        | MSF_developed   |  GPS-noised  |
 | --------   | -----:  | :----:  |
-| RMSE     | TODO |   TODO   |
-| MAE       |  None    |  None   |
+| RMSE     | 9.219306 |   TODO   |
+| STD       |  5.023872   |  None   |
+| Mean       |  7.730220   |  None   |
+
+**Note:** I have tested four noised GPS conditions, and the results are contained in the [MSF_noised_results]()
 
 [1]: https://ieeexplore.ieee.org/document/6696917/authors#authors
 [2]: https://github.com/milkytipo/ethzasl_msf

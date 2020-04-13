@@ -19,7 +19,7 @@ core/core_noise_gyrbias: 0.005 #1.9393e-05
 /vision_sensor/pose_sensor/pose_noise_q_wv: 0.0
 /vision_sensor/pose_sensor/pose_noise_q_ic: 0.0
 /vision_sensor/pose_sensor/pose_noise_p_ic: 0.0
-/vision_sensor/pose_sensor/pose_delay: 0.00 # this indicates the sensor delay of GNSS receiver. Not like MSCKF and VINS, MSF doesn't estimate this parameter in core state, you should adjust it by experiments
+/vision_sensor/pose_sensor/pose_delay: 0.1 # this indicates the sensor delay of GNSS receiver. Not like MSCKF and VINS, MSF doesn't estimate this parameter in core state, you should adjust it by experiments
 /vision_sensor/pose_sensor/pose_noise_meas_p: 0.02 #set by experience 
 /vision_sensor/pose_sensor/pose_noise_meas_q: 0.02
 /vision_sensor/pose_sensor/pose_initial_scale: 1
@@ -39,7 +39,7 @@ core/core_noise_gyrbias: 0.005 #1.9393e-05
 /vision_sensor/position_pose_sensor/pose_fixed_scale: true
 /vision_sensor/position_pose_sensor/pose_fixed_p_ic: true
 /vision_sensor/position_pose_sensor/pose_fixed_q_ic: true
-/vision_sensor/position_pose_sensor/pose_fixed_p_wv: false
+/vision_sensor/position_pose_sensor/pose_fixed_p_wv: true
 /vision_sensor/position_pose_sensor/pose_fixed_q_wv: false
 
 /vision_sensor/pose_sensor/pose_absolute_measurements: true #if the pose from slam is the absolute value, but not relative value from last measurement, it should be true. e.g. orb-slam: true
@@ -56,7 +56,7 @@ core/core_noise_gyrbias: 0.005 #1.9393e-05
 /vision_sensor/position_sensor/init/p_ip/z: 0 #0.05
 
 /vision_sensor/position_pose_sensor/core_height: 1  #used to multiply scale for initialization 
-/vision_sensor/position_pose_sensor/position_yaw_init: 62 #-128.0 #used this value to set initial yaw bias from SLAM position to Horizontal plane and GNSS position, the two trajectories has the yaw bias.
+/vision_sensor/position_pose_sensor/position_yaw_init: 62 #-128.0 #used this value to set initial yaw bias between SLAM position to Horizontal plane and GNSS position, the two trajectories has the yaw bias.
 
 
 /vision_sensor/position_pose_sensor/position_fixed_p_ip: ture

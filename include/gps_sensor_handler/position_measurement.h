@@ -153,12 +153,12 @@ struct PositionMeasurement : public PositionMeasurementBase {
     if (isabsolute_) {  // Does this measurement refer to an absolute measurement,
       // or is it relative to the last measurement.
       // Get a const ref, so we can read core states.
+//      MSF_WARN_STREAM("***GPS H Matrix is calculating***");
       const EKFState_T& state = *state_nonconst_new;
       // init variables
       Eigen::Matrix<double, nMeasurements,
           msf_core::MSF_Core<EKFState_T>::nErrorStatesAtCompileTime> H_new;
       Eigen::Matrix<double, nMeasurements, 1> r_old;
-      MSF_WARN_STREAM("***GPS H Matrix is calculating***");
       CalculateH(state_nonconst_new, H_new);
 
       // Get rotation matrices.
