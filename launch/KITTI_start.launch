@@ -18,7 +18,7 @@
     <node pkg="rosservice" type="rosservice" name="initialize_slam" args="call --wait /vision_sensor/pose_sensor/initialize_msf_scale 1"/>
     <node pkg="rosservice" type="rosservice" name="initialize_fusion" args="call --wait /vision_sensor/position_pose_sensor/initialize_msf_scale 1"/>
 
-    <node name="runslam" pkg = "ORB_SLAM2" type= "Stereo" args = "/home/wuzida/ORB_SLAM2/Vocabulary/ORBvoc.txt /home/wuzida/ORB_SLAM2/Examples/Stereo/KITTI04-12.yaml false" output="screen" />
+    <node name="runslam" pkg = "ORB_SLAM2" type= "Stereo" args = "/home/wuzida/ORB_SLAM2/Vocabulary/ORBvoc.txt /home/wuzida/ORB_SLAM2/Examples/Stereo/KITTI00-02.yaml false" output="screen" />
 
 </launch>
 

@@ -121,9 +121,9 @@ There is an important class which you should notice: [msf_core::MSF_Core](http:/
 After the MSF and ORB_SLAM2 have all started:
 
 ```
-rosrun ai_robot_lcsfl read_node /(your_root_path)/KITTI/RawDataFixed/2011_10_03/2011_10_03_drive_0027 noised-zida
+rosrun ai_robot_lcsfl read_node /(your_root_path)/KITTI/RawDataFixed/2011_10_03/2011_10_03_drive_0027 noised-01
 ```
-**Note:** I named the noised file as noised-zida, you can change the GPS noised setting and generate your own noised data. Of course, you can use raw GPS data.
+**Note:** I named the noised file as noised-01, you can change the GPS noised setting and generate your own noised data. Of course, you can use raw GPS data.
 ```
 rosbag record /imu /gps/fix /msf_core/pose /slam/tf
 ```

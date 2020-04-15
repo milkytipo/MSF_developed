@@ -5,7 +5,6 @@
 /core/data_playback: true
 /core/fixed_bias: 0.01
 
-
 #########IMU PARAMETERS#######
 #######  #The range of the noises were set in MSF_Core.cfg, you cannot set the value beyond the range(threshold),or it will be not effective
 core/core_noise_acc: 0.5 #2.0000e-3  # EuRoc has those parameters, but KITTI does not.
