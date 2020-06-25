@@ -75,17 +75,17 @@ Generally, you should use the angle/velocity random walk ( or "white nosie") to 
 Parameter values are very very important for MSF, be careful!Z
 
 ## **MSF_developed Method Structure**
-MSF_developed
-----|include
-    --------|gps_sensor_handler
-    ---------------------|position_sensorhandler.hpp/.h
-    ---------------------|position_measurement.h
-    --------|vision_sensor_handle
-    ---------------------|pose_sensorhandler.hpp/.h
-    ---------------------|pose_measurement.h
-----|src
-    --------|position_pose_msf (*position_msf* means only GPS-IMU, *pose_msf* means only SLAM-IMU)
-    ---------------------|position_pose_sensormanager.h   
+MSF_developed  
+├── include  
+│     ├──  gps_sensor_handler  
+│                ├──  position_sensorhandler.hpp/.h  
+│                └── position_measurement.h  
+│     └──  vision_sensor_handle  
+│                ├── pose_sensorhandler.hpp/.h  
+│                └── pose_measurement.h  
+└── src  
+      └──  position_pose_msf (*position_msf* means only GPS-IMU, *pose_msf* means only SLAM-IMU)  
+                 └── position_pose_sensormanager.h        
 
 **_sensornamager.h** is used for reading parameters from yaml, initialization, as well as creating the pose/position handler (as /include/_hanlder.h) and IMU_handler (as /msf_core/../msf_IMUHandler_ROS.h).
 
