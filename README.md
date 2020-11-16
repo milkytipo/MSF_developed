@@ -101,6 +101,8 @@ p.s.2 Initialization is called by the method msf_core::Init() (in the msf_core_i
 
 There is an important class which you should notice: [msf_core::MSF_Core](http://ethz-asl.github.io/ethzasl_msf/html/classmsf__core_1_1MSF__Core.html), which is in charge of the IMU pose information, measurement management and the state buffer management.
 
+<img width = "630" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/code_structure.png" /></div>
+
 **debug tips**:
 1. if you want to check whether the GPS sensor fusion or SLAM sensor fusion are working on well or not, you can directly cancel the annotation of the MSF_WARN_STREAM("\***GPS H Matrix is calculating***") in position_measurement.h and the MSF_WARN_STREAM("\***SLAM H Matrix is calculating***") in pose_measurement.h.
 2. if you want to obtain the real time core state display, you just need to cancel the annotation of the the MSF_INFO_STREAM("the fixed pwv :"<< **xxxxxx**) in pose_measurement.h.
