@@ -1,11 +1,11 @@
 #MSF_developed
 ---
-### An extended version which regarded the original ETH MSF (mult-sensor fusion) as the lib to import, and extracted the *msf_updates* into an independent section. This version realized fusing IMU, SLAM (ORB_SLAM2) and GNSS (or GPS) into a framework.
+### An extended version which regarded the original ETH MSF (multi-sensor fusion) as the lib to import, and extracted the *msf_updates* into an independent section. This version realized fusing IMU, SLAM (ORB_SLAM2) and GNSS (or GPS) into a framework.
 ---
 
 Authors: [Zida Wu](https://github.com/milkytipo), [Zheng Gong](https://github.com/gauxonz), [Qiang Liu](https://github.com/LugiaLiu)
 
-MSF is a good algorithm, but obviously, the code and the theory are really not friendly to a researcher. I think that's why there are few people want to develop it further. So I just summarize my experience, hoping the later people could run it as soon as possbile. MSF is good algorithm, if you can run it well, it must give you some insightful ideas about the sensor fusion.
+MSF is a good algorithm, but obviously, the code and the theory are really not friendly to a researcher. I think that's why there are few people want to develop it further. So I just summarize my experience, hoping the later people could run it as soon as possible. MSF is a good algorithm, if you can run it well, it must give you some insightful ideas about the sensor fusion.
 
 ETH的MSF是一个非常优秀的多源传感器融合（松耦合）开源框架，尽管是松耦合，但是最终经过修改和调试后的MSF的效果依然让我觉得非常惊喜。同时由于MSF原始代码非常的不优美简洁，所以我特地将MSF源码作为一个“库”来使用，而将我们可以扩展和开发的部分单独提取出来开发成MSF_developed，这样对代码理解和使用会有更好的帮助。需要提前说明的是，由于原始MSF文章公式的错误和代码的问题，导致研究者者直接阅读代码和看文章公式推导会存在疑惑，这里我都将一一解答。此外，鉴于KITTI数据集本身的缺陷，以及跑MSF的需要等原因，要想完整跑出理想MSF效果，需要KITTI数据预处理、MSF源码修改，GPS加噪声（可选），ORBSLAM2的publish位姿的话题（topic），轨迹显示等各项操作，不过我已经全部一条龙在本Readme中进行说明和解释，Good Luck！如果觉得有用，给个star吧！hhhhhh
 
@@ -15,7 +15,7 @@ In order to make it convenient for researcher to understand and run the *MSF_dev
 > * The code in original MSF is not concise enough, so I put the MSF as the lib and develop the *MSF_developed* to make users fully master how to run the framework. Moreover, I have fixed some bugs and time setting in MSF (if you use MSF firstly you have large probability get troubles about the timestamp), so I recommmend you use my [ethzasl_msf][2] as your MSF choice.
 > * You have to fully understand parameters in the [position_pose_sensor_fix.yaml][yaml], since I think it contains the core idea of the MSF design.
 
-Okay, now I will discuss the problems one bye one. I will tell you how to fix it and which tools you should use. After those a brief demo would be given to show how to run the **MSF_developed**.
+Okay, now I will discuss the problems one by one. I will tell you how to fix it and which tools you should use. After those a brief demo would be given to show how to run the **MSF_developed**.
 
 ## **Key Problem**
 ### 1.KITTI Dataset Process and Add noise into GPS data
@@ -25,11 +25,11 @@ Okay, now I will discuss the problems one bye one. I will tell you how to fix it
 > * The GPS data in KITTI was obtained by RTK-fixed results, which owns high positioning quality. If we want to demonstrate the affect of the GPS in our framework, we should not induce such good results.
 > * The kitti to rosbag tools which officially recommended are not good, because it will lost covariance in GPS and other problems.
 
-Thus, we should find a way to synchronize the IMU-GPS-Images data, interprete the lost data to make it continous, and add some noise into the GPS data. If possible, we should directly read data from files, but not from bag just like VINS-Mono. (Actually, I realize this funcion in [read_dataset ](https://github.com/milkytipo/MSF_developed/tree/master/src/read_dataset)node.
+Thus, we should find a way to synchronize the IMU-GPS-Images data, interpret the lost data to make it continuous, and add some noise into the GPS data. If possible, we should directly read data from files, but not from bag just like VINS-Mono. (Actually, I realize this function in [read_dataset ](https://github.com/milkytipo/MSF_developed/tree/master/src/read_dataset) node.
 
 **Tools：**
 [KITTI-Interpre][4]
-After using this tool, you can transfer the unsynced data into synced data with high IMU frequency, as well as continous GPS and IMU. Besides, in the [InterpAndGnss.m](https://github.com/gauxonz/KITTI-interp/blob/master/InterpAndNoiseGnss.m) you can add noise in the GPS.
+After using this tool, you can transfer the unsynced data into synced data with high IMU frequency, as well as continuous GPS and IMU. Besides, in the [InterpAndGnss.m](https://github.com/gauxonz/KITTI-interp/blob/master/InterpAndNoiseGnss.m) you can add noise in the GPS.
 
 Please note that, the dataset I used follows the files structure follows this tools instruction. The reason why I mentioned it is that, in my improvement I directly reading raw data from files but not through rosplay bag.
 
@@ -42,19 +42,19 @@ Please note that, the dataset I used follows the files structure follows this to
 At first, the figure shown below is about the whole architecture about msf. 
 <div align = center><img width = "630" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/MSF_Geometry_Constraint.png" /></div>
 
-We can sperately introduce the SLAM-IMU sub-framework and GPS-IMU sub-framework. Let's see the Jacobi matrix and the geometry constraint as follows.
+We can separately introduce the SLAM-IMU sub-framework and GPS-IMU sub-framework. Let's see the Jacobi matrix and the geometry constraint as follows.
 
 <div align = center><img width = "630" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/SLAM-IMU_Frame.png" />
 <img width = "630" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/GPS-IMU_Frame.png" /></div>
 
-If you have comprehended the MSF and Error-state Kalman Filter well, you can understand each iterm in Jacobi meaning what. For example, as you can see, the SLAM observation in SLAM-IMU framework can calibrate every error-state except for Δb.
+If you have comprehended the MSF and Error-state Kalman Filter well, you can understand each item in Jacobi meaning what. For example, as you can see, the SLAM observation in SLAM-IMU framework can calibrate every error-state except for Δb.
 
 However!!! That is not like that!!! ***Let's take SLAM-IMU as example, from the Jacobi matrix , you can use /slam/pose to calibrate the *q_ic* and *q_iw* (in msf code, *q* means *q_iw*), but if you have a further consideration it will not work. Suppose the /slam/pose has a drift, it could come from the *q_ic* or *q_iw*, but the equation will calibrate the two parameters together, so it will change the two transforms at the same time even if there's only the drift of the *q_iw*. ***
-(if you would had run the code well, you can have a test to demenstrate that: if you loose fix of the q_ic， or loose fix of the q_wv， the final result would be bad than the fixed result)
+(if you would had run the code well, you can have a test to demonstrate that: if you loose fix of the q_ic， or loose fix of the q_wv， the final result would be bad than the fixed result)
 
-Luckly, we can have offline calibration about Tic and Tig, thus, let's fix the transform of Tic and Tig. As for the Twv, I will talk about that below~
+Luckily, we can have offline calibration about Tic and Tig, thus, let's fix the transform of Tic and Tig. As for the Twv, I will talk about that below~
 
-Further, if you want to fuse the GPS-IMU-SLAM together, you should seriously think about the *p_wv* and *q_wv*. Of course, as we talk above, one /slam/pose observation will calibrate the Twv and Tiw together, and there is no direct observation of *w* node in the geometry constraint. It will results in unpredictable drifts. However, the two things you have to know.
+Further, if you want to fuse the GPS-IMU-SLAM together, you should seriously think about the *p_wv* and *q_wv*. Of course, as we talk above, one /slam/pose observation will calibrate the Twv and Tiw together, and there is no direct observation of *w* node in the geometry constraint. It will result in unpredictable drifts. However, there are two things you have to know.
 
 **Firstly, GPS-IMU framework is about the global framework (or ENU framework), but the SLAM-IMU is the local framework (or SLAM framework), the accociation about the two framework is the w-v transform, so you have to loose the relationship to let the observation slowly calibrate it.**
 
@@ -70,11 +70,12 @@ As for the [position_pose_sensor_fix.yaml][yaml], I think I have added essential
 
 The only thing I should mention is about the IMU. If the dataset doesn't provide the noise parameters or you want to deploy the msf into you own robot, you should get those parameters by yourself. So, I recommended the [kalibr_allam](https://github.com/rpng/kalibr_allan) to obtain those. Be friendly, in case you haven't learned it well about Allan variance, I want to provide other information about the Allan variance.
 
-Generally, you should use the angle/velocity random walk ( or "white nosie") to set the *core_noise_acc*, and use the  (angle/velocity) rate random walk to set the *core_noise_accbias*. ( I used the noise name from the original Allan paper ["Analysis and Modeling of Inertial Sensors Using Allan Variance"](https://ieeexplore.ieee.org/document/4404126), in other tools, they called the angular random walk into "while noise", and call rate random walk into "bias" or "random walk". Seriously, I think they are not rigorous. Additionally, if you cannot obain the rate random walk, you can use the bias instability to replace it.
+Generally, you should use the angle/velocity random walk ( or "white nosie") to set the *core_noise_acc*, and use the  (angle/velocity) rate random walk to set the *core_noise_accbias*. ( I used the noise name from the original Allan paper ["Analysis and Modeling of Inertial Sensors Using Allan Variance"](https://ieeexplore.ieee.org/document/4404126), in other tools, they called the angular random walk into "while noise", and call rate random walk into "bias" or "random walk". Seriously, I think they are not rigorous. Additionally, if you cannot obtain the rate random walk, you can use the bias instability to replace it.
 
 Parameter values are very very important for MSF, be careful!Z
 
 ## **MSF_developed Method Structure**
+```
 MSF_developed  
 ├── include  
 │     ├──  gps_sensor_handler  
@@ -86,6 +87,7 @@ MSF_developed
 └── src  
       └──  position_pose_msf (*position_msf* means only GPS-IMU, *pose_msf* means only SLAM-IMU)  
                  └── position_pose_sensormanager.h        
+```
 
 **_sensornamager.h** is used for reading parameters from yaml, initialization, as well as creating the pose/position handler (as /include/_hanlder.h) and IMU_handler (as /msf_core/../msf_IMUHandler_ROS.h).
 
@@ -93,11 +95,11 @@ p.s.1 IMU_handler is in charge of Kalman prediction process.
 
 p.s.2 Initialization is called by the method msf_core::Init() (in the msf_core_inl.h) and MSF_InitMeasurement() (in msf_measurement_inl.h).
 
-**pose_hanlder.h** is used to subscribe topics and transfer the topics, add measurement into queue (by calling methond in msf_core).
+**pose_hanlder.h** is used to subscribe topics and transfer the topics, add measurement into queue (by calling method in msf_core).
 
 **position_hanlder.h** is the same function as the pose_hanlder.h, but it has one more function is to transfer the latitude/longitude/altitude into ENU coordinates. 
 
-**_measurement.h** is in charege of calculating the Jacobi H matrix (by .Apply() method) and residual r matrix. Further, to accomplish the Kalman update process. (by .CalculateAndApplyCorrection() method)
+**_measurement.h** is in charge of calculating the Jacobi H matrix (by .Apply() method) and residual r matrix. Further, to accomplish the Kalman update process. (by .CalculateAndApplyCorrection() method)
 
 There is an important class which you should notice: [msf_core::MSF_Core](http://ethz-asl.github.io/ethzasl_msf/html/classmsf__core_1_1MSF__Core.html), which is in charge of the IMU pose information, measurement management and the state buffer management.
 
@@ -105,7 +107,7 @@ There is an important class which you should notice: [msf_core::MSF_Core](http:/
 
 **debug tips**:
 1. if you want to check whether the GPS sensor fusion or SLAM sensor fusion are working on well or not, you can directly cancel the annotation of the MSF_WARN_STREAM("\***GPS H Matrix is calculating***") in position_measurement.h and the MSF_WARN_STREAM("\***SLAM H Matrix is calculating***") in pose_measurement.h.
-2. if you want to obtain the real time core state display, you just need to cancel the annotation of the the MSF_INFO_STREAM("the fixed pwv :"<< **xxxxxx**) in pose_measurement.h.
+2. if you want to obtain the real time core state display, you just need to cancel the annotation of the MSF_INFO_STREAM("the fixed pwv :"<< **xxxxxx**) in pose_measurement.h.
 
 (I know the debug way is a little stupid... but they are simple as well as efficient.)
 
@@ -144,14 +146,14 @@ Then, you can see the trajectory like this:
 <div align = center><img width = "600" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/images/MSF-SLAM-GPS.png" /></div>
 <div align = center><img width = "600" height ="400" src ="https://github.com/milkytipo/MSF_developed/blob/master/MSF_noised_results/noised01-GPS-MSF-Front.png" /></div>
 
-### **P.S. 2 A Error Calculator Tool for SLAM/MSF/GPS - evo**
-If you want to obtain the RMSE, STD, MAE and other error items, I recommend you the [evo](https://github.com/MichaelGrupp/evo) tool. In addition, I have transfered the KITTI groudtruth file into a general format for MSF error evaluation, namely [kitti_00_groudtruth.tum](https://github.com/milkytipo/MSF_developed/blob/master/MSF_noised_results/kitti_00_groudtruth.tum). 
+### **P.S. 2 An Error Calculator Tool for SLAM/MSF/GPS - evo**
+If you want to obtain the RMSE, STD, MAE and other error items, I recommend you the [evo](https://github.com/MichaelGrupp/evo) tool. In addition, I have transfered the KITTI groundtruth file into a general format for MSF error evaluation, namely [kitti_00_groudtruth.tum](https://github.com/milkytipo/MSF_developed/blob/master/MSF_noised_results/kitti_00_groudtruth.tum). 
 
-**Note:** I recommed you use this groudtruth file, in case you spend lots of time to do the same work as I have done.
+**Note:** I recommend you use this groundtruth file, in case you spend lots of time to do the same work as I have done.
 
 After you have run the MSF_developed algorithm and recorded the /slam/tf, /msf_core/pose, /imu and /gps/fix topics, you can use evo to estimate the error levels.
 
-First, save the topics in bag into .tum. Use the command below to general *pose.tum* file.
+First, save the topics in bag into .tum. Use the command below to generate *pose.tum* file.
 ```
 evo_traj bag MSF_developed_fusion.bag /msf_core/pose --save_as_tum
 ```
@@ -181,5 +183,3 @@ I use the [KITTI-Interpre][4] to generate a noised-01 oxts, then the msf results
 [3]: http://www.cvlibs.net/datasets/kitti/raw_data.php
 [4]: https://github.com/gauxonz/KITTI-interp
 [yaml]:https://github.com/milkytipo/MSF_developed/blob/master/position_pose_sensor_fix.yaml
-
-
